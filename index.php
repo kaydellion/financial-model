@@ -307,7 +307,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
       <!-- Image Column -->
       <div class="col-md-5 mb-4 mb-md-0">
-        <img src="assets/img/Sign up-pana.png" alt="Join Marketplace" class="img-fluid affiliate-prompt-img">
+        <img src="assets/img/Marketing-amico.png" alt="Join Marketplace" class="img-fluid affiliate-prompt-img">
       </div>
       <!-- Content Column -->
       <div class="col-md-7">
