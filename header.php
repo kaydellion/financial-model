@@ -143,61 +143,21 @@ if (in_array($current_page, $excluded_pages)) {
     <div class="top-bar py-2">
       <div class="container-fluid container-xl">
         <div class="row align-items-center">
-          <div class="col-lg-4 d-none d-lg-flex">
-            <div class="top-bar-item">
-              <i class="bi bi-telephone-fill me-2"></i>
-              <span>Need help? Call us: </span>
-              <a href="tel:+1234567890">+1 (234) 567-890</a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-12 text-center">
-            <div class="announcement-slider swiper init-swiper">
-              <script type="application/json" class="swiper-config">
-                {
-                  "loop": true,
-                  "speed": 600,
-                  "autoplay": {
-                    "delay": 5000
-                  },
-                  "slidesPerView": 1,
-                  "direction": "vertical",
-                  "effect": "slide"
-                }
-              </script>
-              <div class="swiper-wrapper">
-                <div class="swiper-slide">🚚 Free shipping on orders over $50</div>
-                <div class="swiper-slide">💰 30 days money back guarantee.</div>
-                <div class="swiper-slide">🎁 20% off on your first order</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 d-none d-lg-block">
-            <div class="d-flex justify-content-end">
-              <div class="top-bar-item dropdown me-3">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                  <i class="bi bi-translate me-2"></i>EN 
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>English</a></li>
-                  <li><a class="dropdown-item" href="#">Español</a></li>
-                  <li><a class="dropdown-item" href="#">Français</a></li>
-                  <li><a class="dropdown-item" href="#">Deutsch</a></li>
-                </ul>
-              </div>
-              <div class="top-bar-item dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                  <i class="bi bi-currency-dollar me-2"></i>USD
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>USD</a></li>
-                  <li><a class="dropdown-item" href="#">EUR</a></li>
-                  <li><a class="dropdown-item" href="#">GBP</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <!-- Add this block for your links, visible on all screens -->
+<div class="col-12 my-2 my-lg-0">
+  <ul class="list-unstyled d-flex flex-wrap mb-0 justify-content-center justify-content-lg-end">
+    <li class="bg-secondary text-white p-2 me-2">
+      <a class="text-white text-small" href="<?php echo $siteurl; ?>loyalty-program.php">Loyalty Program</a>
+    </li>
+    <li class="bg-primary text-white p-2 me-2">
+      <a class="text-white text-small" href="<?php echo $siteurl; ?>affiliate-details.php">Affiliate Program</a>
+    </li>
+    <li class="bg-secondary text-white p-2 me-2">
+      <a class="text-white text-small" href="<?php echo $siteurl; ?>marketplace.php">Marketplace</a>
+    </li>
+  </ul>
+</div>
+          
         </div>
       </div>
     </div>
@@ -208,7 +168,7 @@ if (in_array($current_page, $excluded_pages)) {
         <div class="d-flex py-3 align-items-center justify-content-between">
 
           <!-- Logo -->
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="index" class="logo d-flex align-items-center">
             <!-- Uncomment the line below if you also wish to use an image logo -->
             <!-- <img src="assets/img/logo.webp" alt=""> -->
             <h1 class="sitename"><?php echo $sitename; ?></h1>

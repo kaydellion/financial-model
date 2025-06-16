@@ -315,7 +315,7 @@ while ($row = mysqli_fetch_assoc($result)) {
           <h2 class="mb-3">Join Affiliate</h2>
           <p class="mb-4">Are you passionate about finance, entrepreneurship, or passive income? Becoming an affiliate of FinancialModels.Store is your chance to turn your network and online presence into a rewarding source of income. By partnering with us, you can promote high-quality, professionally crafted financial models to businesses, startups, and finance enthusiasts worldwide.</p>
           <div class="affiliate-buttons d-flex justify-content-center justify-content-md-start gap-3 flex-wrap">
-            <a href="<?php echo $siteurl; ?>affiliates" class="btn btn-primary register-btn">Join Affiliate</a>
+            <a href="<?php echo $siteurl; ?>affiliate-details" class="btn btn-primary register-btn">Join Affiliate</a>
           
           </div>
           </div>
