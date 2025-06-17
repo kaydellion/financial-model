@@ -49,42 +49,52 @@
 
           <div class="col-lg-2 col-md-6 col-sm-6">
             <div class="footer-widget">
-              <h4>Shop</h4>
-              <ul class="footer-links">
-                <li><a href="category.html">New Arrivals</a></li>
-                <li><a href="category.html">Bestsellers</a></li>
-                <li><a href="category.html">Women's Clothing</a></li>
-                <li><a href="category.html">Men's Clothing</a></li>
-                <li><a href="category.html">Accessories</a></li>
-                <li><a href="category.html">Sale</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-lg-2 col-md-6 col-sm-6">
-            <div class="footer-widget">
-              <h4>Support</h4>
-              <ul class="footer-links">
-                <li><a href="support.html">Help Center</a></li>
-                <li><a href="account.html">Order Status</a></li>
-                <li><a href="shiping-info.html">Shipping Info</a></li>
-                <li><a href="return-policy.html">Returns &amp; Exchanges</a></li>
-                <li><a href="#">Size Guide</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-lg-2 col-md-6 col-sm-6">
-            <div class="footer-widget">
               <h4>Company</h4>
               <ul class="footer-links">
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="about.html">Careers</a></li>
-                <li><a href="about.html">Press</a></li>
-                <li><a href="about.html">Affiliates</a></li>
-                <li><a href="about.html">Responsibility</a></li>
-                <li><a href="about.html">Investors</a></li>
+                <li><a href="<?php echo $siteurl; ?>about.php">About Us</a></li>
+                <li><a href="<?php echo $siteurl; ?>contact.php">Contact Us</a></li>
+                <li><a href="<?php echo $siteurl; ?>privacy.php">Privacy Policy</a></li>
+                <li><a href="<?php echo $siteurl; ?>cookie-policy">Cookie Policy</a></li>
+                <li><a href="<?php echo $siteurl; ?>terms">Terms of Use</a></li>
+                <li><a href="<?php echo $siteurl; ?>why-us">Why Us?</a></li>
+                <li><a href="<?php echo $siteurl; ?>blog">News and Press Releases</a></li>
+                <li><a href="category.html">FAQ</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="footer-widget">
+              <h4>Use Cases</h4>
+              <ul class="footer-links">
+              <?php
+                $sql = "SELECT * FROM " . $siteprefix . "use_cases WHERE parent_id IS NULL LIMIT 6";
+                $sql2 = mysqli_query($con, $sql);
+                while ($row = mysqli_fetch_array($sql2)) {
+                    $category_name = $row['name'];
+                    $alt_names = $row['slug'];
+                    $slugs = $alt_names;
+                    echo '<li><a href="'.$siteurl.'use-case?use-cases=' . $slugs . '">' . $category_name . '</a></li>';
+                }
+                ?>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="footer-widget">
+              <h4>Categories</h4>
+              <ul class="footer-links">
+                  <?php
+                $sql = "SELECT * FROM " . $siteprefix . "categories WHERE parent_id IS NULL LIMIT 6";
+                $sql2 = mysqli_query($con, $sql);
+                while ($row = mysqli_fetch_array($sql2)) {
+                    $category_name = $row['category_name'];
+                    $alt_names = $row['slug'];
+                    $slugs = $alt_names;
+                    echo '<li><a href="'.$siteurl.'category/' . $slugs . '">' . $category_name . '</a></li>';
+                }
+                ?>
               </ul>
             </div>
           </div>
