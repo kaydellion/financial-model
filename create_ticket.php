@@ -11,7 +11,7 @@ error_reporting(E_ALL);
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.php">Home</a></li>
-            <li class="tickets.php">All Tickets</li>
+            <li class="active"><a href="tickets.php">All Tickets</a></li>
           </ol>
         </nav>
       </div>
@@ -69,10 +69,10 @@ error_reporting(E_ALL);
     </select>
 
     <p>Recipient Involved</p>
-   <div id="orderDetails">
-        <!-- Order details will be loaded here -->
+  <div id="orderDetails">
+    
     </div>
-                  </div>
+        </div>
 				  </div>
 
 
@@ -111,5 +111,46 @@ error_reporting(E_ALL);
 
     </section><!-- /Checkout Section -->
   </main>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const orderIdInput = document.getElementById('order_id');
+  const orderId = orderIdInput ? orderIdInput.value : null;
 
+  if (orderId) {
+    getOrderDetails(orderId);
+  }
+});
+
+function getOrderDetails(orderId) {
+  if (!orderId) {
+    console.warn('No order ID provided.');
+    return;
+  }
+
+  fetch('get_order_details.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ order_id: orderId })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not OK');
+    }
+    return response.text(); // Expecting HTML from PHP
+  })
+  .then(html => {
+    const orderDetailsEl = document.getElementById('orderDetails');
+    if (orderDetailsEl) {
+      orderDetailsEl.innerHTML = html;
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching order details:', error);
+  });
+}
+
+
+</script>
 <?php include 'footer.php'; ?>

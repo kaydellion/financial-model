@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include "backend/connect.php";
 
 if(isset($_POST['order_id'])) {
@@ -66,4 +63,3 @@ if(isset($_POST['order_id'])) {
     }
 }
 ?>
-

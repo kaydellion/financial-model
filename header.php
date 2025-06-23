@@ -86,7 +86,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 $excluded_pages = array('cart.php', 'pay_success.php', 'pay_failed.php', 'checkout.php', 'free_order_handler.php',
 'dashboard.php','loyalty-status.php','saved-reports.php','my_orders.php','manual_orders.php', 'wallet.php','view-blog.php','blog.php',
 'notifications.php','tickets.php','models.php','sales.php','reviews.php','my_orders.php','order_details.php','settings.php','tickets.php',
-'resources-sold.php','resource.php','edit-report.php','change-password.php','create-ticket.php','add-report.php','delete.php','saved-models.php',
+'resources-sold.php','resource.php','edit-report.php','change-password.php','create_ticket.php','add-report.php','delete.php','saved-models.php',
 'withdrawhistory.php','my_wishlist.php');
 if (in_array($current_page, $excluded_pages)) {
     checkActiveLog($active_log); 
@@ -121,6 +121,7 @@ if (in_array($current_page, $excluded_pages)) {
   
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
    
 
   <!-- Main CSS File -->

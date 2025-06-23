@@ -1,36 +1,49 @@
 <?php include "header.php"; ?>
-
-<div class="container-xxl flex-grow-1 container-p-y">
+<main class="main">
+    <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Add Report</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.php">Home</a></li>
+            <li class="current">Add Report</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+    <section id="checkout" class="checkout section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row">
+          <div class="col-lg-9 mx-auto">
+            <div class="checkout-container" data-aos="fade-up">
+              <form method="POST" enctype="multipart/form-data">
+ <div class="checkout-section">
+                  <div class="section-header">
+                    <h3>Add Report</h3>
+                  </div>
 
 <!-- Basic Layout -->
+   <div class="section-content">
                <div class="row">
-                <div class="col-xl">
-                  <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h4 class="mb-0">Upload New Report</h4>
-                    </div>
-                    <div class="card-body">
-                      <form method="POST" enctype="multipart/form-data">
 
-                      <h6>Basic Information</h6>
-
-                      <div class="mb-3">
+                      <div class="mb-3 form-group">
                       <input type="file" class="form-control" id="imageInput" name="images[]" multiple accept="image/*">
                       <div id="preview" class="preview-container"></div>
                       </div>
                       <input type="hidden" name="user" value="<?php echo $user_id; ?>">
-              
-                      <div class="mb-3">
+
+                      <div class="mb-3 form-group">
                           <label class="form-label" for="course-id">Report ID</label>
                             <input type="text" id="course-id" name="id" class="form-control" value="PH<?php echo sprintf('%06d', rand(1, 999999)); ?>" readonly required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 form-group">
                           <label class="form-label" for="basic-default-fullname">Title</label>
                           <input type="text" class="form-control" name="title" id="basic-default-fullname" placeholder="Learning loops" required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 form-group">
                           <label class="form-label" for="basic-default-message">Description</label>
                           <textarea id="basic-default-message" name="description" class="form-control" placeholder="Write required information or details here...."></textarea>
                         </div>
@@ -52,7 +65,8 @@
                         </div>
 ----->
                         <h6>Area of Specialization:</h6>
-                         <div class="mb-3">
+                         <div class="mb-3 form-group">
+                          <label class="form-label" for="course-category">Category</label>
                         <select class="form-select" name="category" aria-label="Default select example" required>
                           <option selected>- Select Category -</option>
                           <?php
@@ -77,7 +91,7 @@ while ($row = $result->fetch_assoc()) {
 }
 ?>
 
-<div class="mb-3">
+<div class="mb-3 form-group">
   <label class="form-label" for="resourceType">Use Cases</label>
   <select name="resource_type[]" id="resourceType" multiple class="form-select mb-4 select-multiple" onchange="togglePast()" required>
     <option value="">-- Select Use Cases --</option>
@@ -98,7 +112,7 @@ while ($row = $result->fetch_assoc()) {
 </div>
 
   <h6>Pricing and File Upload</h6>
-                        <div class="mb-3">
+                        <div class="mb-3 form-group">
                           <label class="form-label" for="pricing-type">Pricing Type</label>
                           <select id="pricing-type" name="pricing" class="form-control" onchange="togglePrice()" required>
                             <option value="free">Free</option>
@@ -111,9 +125,10 @@ while ($row = $result->fetch_assoc()) {
                           <p class="text-muted"></p>
                           <input type="number" id="course-price" name="price" class="form-control" step="0.01">
                         </div>
-  <div class="mb-3">
+  <div class="mb-3 form-group">
         <label for="documentSelect" class="form-label ">Select Document Types:</label>
-        <select class="form-control" id="documentSelect" required  onchange="handleDocumentSelect(this)">
+        <select class="form-control" id="documentSelect"  required  onchange="handleDocumentSelect(this)">
+             <option value="">  Select Option</option>
           <option value="word">Word Document (.doc, .docx)</option>
           <option value="excel">Excel Spreadsheet (.xls, .xlsx)</option>
           <option value="powerpoint">PowerPoint Presentation (.ppt, .pptx)</option>
@@ -127,7 +142,7 @@ while ($row = $result->fetch_assoc()) {
       <div id="pageInputs"></div>
 
 <h6>Other Resources</h6>
-<div class="mb-3">
+<div class="mb-3 form-group">
   <label class="form-label" for="supportDocSelect">Upload Files:</label>
   <select name="supportDocSelect[]" id="supportDocSelect" multiple class="form-select mb-4 select-multiple" onchange="handleSupportDocSelect(this)">
     <?php
@@ -143,7 +158,7 @@ while ($row = $result->fetch_assoc()) {
 </div>
 
 <?php foreach ($resourceOptions as $row): ?>
-  <div class="mb-3 supportDocFileInput" id="fileInput_<?php echo $row['id']; ?>" style="display:none;">
+  <div class="mb-3 supportDocFileInput form-group" id="fileInput_<?php echo $row['id']; ?>" style="display:none;">
     <label class="form-label" for="file_<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['name']); ?> File</label>
     <input type="file" class="form-control mb-2" id="file_<?php echo $row['id']; ?>" name="support_files[<?php echo $row['id']; ?>]">
     <label class="form-label" for="price_<?php echo $row['id']; ?>">Price for <?php echo htmlspecialchars($row['name']); ?></label>
@@ -177,24 +192,6 @@ while ($row = $result->fetch_assoc()) {
                           <label class="form-label" for="course-tags">Tags & Keywords</label>
                           <input type="text" id="course-tags" name="tags" class="form-control" placeholder="Separate tags with commas" required>
                         </div>
-
-                        <?php if($user_type === 'admin'): ?>
-                        <div class="mb-3">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="loyalty" name="loyalty">
-                            <label class="form-check-label" for="loyalty">List under our Loyalty Program</label>
-                          </div>
-                        </div>
-                        <?php endif; ?>
-
- <div class="mb-3">
-                          <label class="form-label" for="status-type">Approval Status</label>
-                          <select id="status-type" name="status" class="form-control" required <?= getReadonlyAttribute() ?>>
-                            <option value="pending" selected>Pending</option>
-                            <option value="approved">Approved</option>
-                          </select>
-                        </div>
-
                         <p><button type="submit" name="savedcourse" value="savedcourse" class="btn btn-secondary">Save as Draft</button>
                       <button type="submit" name="addcourse" value="course" class="btn btn-primary">Add Report</button></p>
                       </form>
@@ -202,7 +199,7 @@ while ($row = $result->fetch_assoc()) {
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
 
 

@@ -9,7 +9,7 @@
   </div>
   <div class="col-lg-10 col-12 d-flex align-items-center pt-3 mb-5">
     <div class="d-flex flex-column w-100">
-        <div class="d-flex">
+        <div class="profile-links">
             <?php include "links.php"; ?>
         </div>
         <h2 class="title text-primary font-weight-bold mt-3 mb-5">Hi, <?php echo htmlspecialchars($username); ?></h2>

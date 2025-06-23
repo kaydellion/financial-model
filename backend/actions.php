@@ -1283,6 +1283,788 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_reply_comment'])
 }
 
 
+
+//upload-report
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addcourse'])) {
+    $reportId = mysqli_real_escape_string($con, $_POST['id']);
+    $title = mysqli_real_escape_string($con, $_POST['title']);
+     $description = mysqli_real_escape_string($con, $_POST['description']);
+    $category = mysqli_real_escape_string($con, $_POST['category']);
+    $subcategory = isset($_POST['subcategory']) ? mysqli_real_escape_string($con, $_POST['subcategory']) : null;
+    $pricing = mysqli_real_escape_string($con, $_POST['pricing']);
+    $price = !empty($_POST['price']) ? mysqli_real_escape_string($con, $_POST['price']) : '0';
+    $tags = mysqli_real_escape_string($con, $_POST['tags']);
+    $loyalty = '';
+    $documentTypes = isset($_POST['documentSelect']) ? $_POST['documentSelect'] : [];
+    $status = 'pending'; // Default status
+    $methodology = mysqli_real_escape_string($con, $_POST['methodology']);;
+    $resource_type = implode(',', $_POST['resource_type']);
+    $user_id = $_POST['user'] ?? null;
+    
+
+
+// Replace spaces with hyphens and convert to lowercase
+$baseSlug = strtolower(str_replace(' ', '-', $title));
+
+// Start with the cleaned slug
+$alt_title = $baseSlug;
+$counter = 1;
+
+// Ensure the alt_title is unique
+while (true) {
+    $query = "SELECT COUNT(*) AS count FROM " . $siteprefix . "reports WHERE alt_title = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $alt_title);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if ($row['count'] == 0) {
+        break; // alt_title is unique
+    }
+
+    // Append counter to baseSlug if not unique
+    $alt_title = $baseSlug . '-' . $counter;
+    $counter++;
+}
+
+
+    // Directories for uploads
+    $uploadDir = 'uploads/';
+    $fileuploadDir = 'documents/';
+    $fileKey = 'images';
+    $message = "";
+
+    // Handle image uploads
+    if (empty($_FILES[$fileKey]['name'][0])) {
+        // Use default images if no images are uploaded
+        $defaultImages = ['default1.jpg', 'default2.jpg', 'default3.jpg', 'default4.jpg', 'default5.jpg'];
+        $randomImage = $defaultImages[array_rand($defaultImages)];
+        $reportImages = [$randomImage];
+    }else{
+
+    // Insert images into the database
+    $reportImages = handleMultipleFileUpload($fileKey, $uploadDir);
+    }
+
+    $uploadedFiles = [];
+    foreach ($reportImages as $image) {
+        $stmt = $con->prepare("INSERT INTO " . $siteprefix . "reports_images (report_id, picture, updated_at) VALUES (?, ?, current_timestamp())");
+        $stmt->bind_param("ss", $reportId, $image);
+        if ($stmt->execute()) {
+            $uploadedFiles[] = $image;
+        } else {
+            $message .= "Error inserting image: " . $stmt->error . "<br>";
+        }
+        $stmt->close();
+    }
+
+    // Handle file uploads for different document types
+    $fileFields = [
+        'file_word' => 'word',
+        'file_excel' => 'excel',
+        'file_pdf' => 'pdf',
+        'file_powerpoint' => 'powerpoint',
+        'file_text' => 'text'
+    ];
+
+    foreach ($fileFields as $fileField => $docType) {
+        if (isset($_FILES[$fileField]) && $_FILES[$fileField]['error'] == UPLOAD_ERR_OK) {
+            $filePath = handleFileUpload($fileField, $fileuploadDir);
+            $pagesField = 'pages_' . $docType;
+            $pages = isset($_POST[$pagesField]) ? (int)$_POST[$pagesField] : 0;
+
+            $stmt = $con->prepare("INSERT INTO " . $siteprefix . "reports_files (report_id, title, pages, updated_at) VALUES (?, ?, ?, current_timestamp())");
+            $stmt->bind_param("ssi", $reportId, $filePath, $pages);
+
+            if ($stmt->execute()) {
+                $message .= ucfirst($docType) . " file uploaded and record added successfully!<br>";
+            } else {
+                $message .= "Error uploading $docType file: " . $stmt->error . "<br>";
+            }
+
+            $stmt->close();
+        }
+    }
+
+     // 5. Handle guidance video upload
+  $guidance_video = '';
+if (!empty($_FILES['guidance_video']['name'])) {
+    $ext = strtolower(pathinfo($_FILES['guidance_video']['name'], PATHINFO_EXTENSION));
+    $guidance_video = uniqid('video_') . '.' . $ext;
+    $targetPath = 'uploads/' . $guidance_video;
+
+    if (move_uploaded_file($_FILES['guidance_video']['tmp_name'], $targetPath)) {
+        // File successfully uploaded
+        // Insert into database
+        $query = "INSERT INTO {$siteprefix}guidance (report_id,video_filename, uploaded_at) 
+                  VALUES ('$reportId','$guidance_video', NOW())";
+        mysqli_query($con, $query);
+    } else {
+        echo "Failed to upload video file.";
+    }
+}
+
+
+if (!empty($_POST['supportDocSelect']) && is_array($_POST['supportDocSelect'])) {
+    foreach ($_POST['supportDocSelect'] as $docTypeId) {
+        $docTypeId = mysqli_real_escape_string($con, $docTypeId);
+        $price = isset($_POST['support_prices'][$docTypeId]) ? mysqli_real_escape_string($con, $_POST['support_prices'][$docTypeId]) : '0';
+
+        // Check if a file was uploaded for this doc type
+        if (
+            isset($_FILES['support_files']['name'][$docTypeId]) &&
+            !empty($_FILES['support_files']['name'][$docTypeId]) &&
+            $_FILES['support_files']['error'][$docTypeId] == UPLOAD_ERR_OK
+        ) {
+            $fileName = $_FILES['support_files']['name'][$docTypeId];
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $newFileName = uniqid('doc_') . '.' . $ext;
+            $targetPath = 'uploads/' . $newFileName;
+            if (move_uploaded_file($_FILES['support_files']['tmp_name'][$docTypeId], $targetPath)) {
+                // Insert into doc_file table, now with price
+                $sql = "INSERT INTO {$siteprefix}doc_file (report_id, doc_typeid, filename, price, uploaded_at) 
+                        VALUES ('$reportId', '$docTypeId', '$newFileName', '$price', NOW())";
+                if (mysqli_query($con, $sql)) {
+                    $message .= "Other resource file uploaded and record added successfully!<br>";
+                } else {
+                    $message .= "Error inserting other resource file: " . mysqli_error($con) . "<br>";
+                }
+            } else {
+                $message .= "Failed to upload other resource file.<br>";
+            }
+        }
+    }
+}
+
+// Insert report data into the database
+   $sql = "INSERT INTO " . $siteprefix . "reports 
+        (id, title, description, methodology, use_case, category, subcategory, pricing, price, tags, loyalty, user, created_date, updated_date, status,alt_title) 
+        VALUES 
+        ('$reportId', '$title', '$description', '$methodology', '$resource_type', '$category', '$subcategory', '$pricing', '$price', '$tags', '$loyalty', '$user_id', current_timestamp(), current_timestamp(), '$status','$alt_title')";
+
+if (mysqli_query($con, $sql)) {
+    $message .= "Report added successfully!<br>";
+
+/*
+
+        if ($status === 'approved') {
+            // Notify followers of the seller
+            $followersQuery = "SELECT user_id FROM " . $siteprefix . "followers WHERE seller_id = '$user_id'";
+            $followersResult = mysqli_query($con, $followersQuery);
+    
+            if ($followersResult && mysqli_num_rows($followersResult) > 0) {
+                // Fetch the seller's name
+                $sellerQuery = "SELECT display_name FROM " . $siteprefix . "users WHERE s = '$user_id'";
+                $sellerResult = mysqli_query($con, $sellerQuery);
+                $sellerRow = mysqli_fetch_assoc($sellerResult);
+                $sellerName = $sellerRow['display_name'];
+    
+                // Notify all followers of the seller
+                while ($follower = mysqli_fetch_assoc($followersResult)) {
+                    $followerId = $follower['user_id'];
+    
+                    // Fetch follower details
+                    $followerDetailsQuery = "SELECT email, display_name FROM " . $siteprefix . "users WHERE s = '$followerId'";
+                    $followerDetailsResult = mysqli_query($con, $followerDetailsQuery);
+                    $followerDetails = mysqli_fetch_assoc($followerDetailsResult);
+    
+                    $followerEmail = $followerDetails['email'];
+                    $followerName = $followerDetails['display_name'];
+    
+                    // Prepare the email
+                    $emailSubject = "New Resource Posted by $sellerName";
+                    $emailMessage = "
+                        <p>We are excited to inform you that $sellerName has just posted a new resource titled <strong>$title</strong>.</p>
+                        <p>You can check it out here: <a href='$siteurl/merchant-store.php?seller_id=$user_id'>$sellerName</a></p>
+                        <p>Thank you for following $sellerName!</p>";
+    
+                    // Send the email
+                    sendEmail($followerEmail, $followerName, $siteName, $siteMail, $emailMessage, $emailSubject);
+                   
+                    // Notify user
+                   insertAlert($con, $followerId, "New resource titled $title has been posted by $sellerName", $currentdatetime, 0);
+                }
+            }
+    
+            // Notify followers of the category
+            $categoryFollowersQuery = "SELECT user_id FROM " . $siteprefix . "followers WHERE category_id = '$category'";
+            $categoryFollowersResult = mysqli_query($con, $categoryFollowersQuery);
+    
+            if ($categoryFollowersResult && mysqli_num_rows($categoryFollowersResult) > 0) {
+                // Fetch category name for the email
+                $categoryQuery = "SELECT category_name FROM " . $siteprefix . "categories WHERE id = '$category'";
+                $categoryResult = mysqli_query($con, $categoryQuery);
+                $categoryRow = mysqli_fetch_assoc($categoryResult);
+                $categoryName = $categoryRow['category_name'];
+                $slugs = strtolower(str_replace(' ', '-', $categoryName));
+    
+                // Notify all users following the category
+                while ($follower = mysqli_fetch_assoc($categoryFollowersResult)) {
+                    $followerId = $follower['user_id'];
+    
+                    // Fetch follower details
+                    $followerDetailsQuery = "SELECT email, display_name FROM " . $siteprefix . "users WHERE s = '$followerId'";
+                    $followerDetailsResult = mysqli_query($con, $followerDetailsQuery);
+                    $followerDetails = mysqli_fetch_assoc($followerDetailsResult);
+    
+                    $followerEmail = $followerDetails['email'];
+                    $followerName = $followerDetails['display_name'];
+    
+                    // Prepare the email
+                    $emailSubject = "New Resource in $categoryName";
+                    $emailMessage = "
+                        <p>We are excited to inform you that a new resource titled <strong>$title</strong> has been added to the <strong>$categoryName</strong> category.</p>
+                        <p>You can check it out here: <a href='$siteurl/category.php/$slugs'>$categoryName</a></p>
+                        <p>Thank you for following the $categoryName category!</p>
+                    ";
+    
+                    // Send the email
+                    sendEmail($followerEmail, $followerName, $siteName, $siteMail, $emailMessage, $emailSubject);
+
+                     // Notify user
+                   insertAlert($con, $followerId, "New resource titled $title  under category $categoryName  has been posted", $currentdatetime, 0);
+                }
+            }
+        }
+
+        */
+    
+    } else {
+        $message .= "Error adding report: " . mysqli_error($con) . "<br>";
+    }
+
+    // Display success or error message
+    showSuccessModal('Processed', $message);
+    header("refresh:2; url=add-report.php");
+}
+
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['savedcourse'])) {
+        $reportId = mysqli_real_escape_string($con, $_POST['id']);
+    $title = mysqli_real_escape_string($con, $_POST['title']);
+     $description = mysqli_real_escape_string($con, $_POST['description']);
+    $category = mysqli_real_escape_string($con, $_POST['category']);
+    $subcategory = isset($_POST['subcategory']) ? mysqli_real_escape_string($con, $_POST['subcategory']) : null;
+    $pricing = mysqli_real_escape_string($con, $_POST['pricing']);
+    $price = !empty($_POST['price']) ? mysqli_real_escape_string($con, $_POST['price']) : '0';
+    $tags = mysqli_real_escape_string($con, $_POST['tags']);
+    $loyalty = '';
+    $documentTypes = isset($_POST['documentSelect']) ? $_POST['documentSelect'] : [];
+    $status = "draft";
+    $methodology = mysqli_real_escape_string($con, $_POST['methodology']);;
+    $resource_type = implode(',', $_POST['resource_type']);
+    $user_id = $_POST['user'] ?? null;
+    
+
+
+// Replace spaces with hyphens and convert to lowercase
+$baseSlug = strtolower(str_replace(' ', '-', $title));
+
+// Start with the cleaned slug
+$alt_title = $baseSlug;
+$counter = 1;
+
+// Ensure the alt_title is unique
+while (true) {
+    $query = "SELECT COUNT(*) AS count FROM " . $siteprefix . "reports WHERE alt_title = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $alt_title);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if ($row['count'] == 0) {
+        break; // alt_title is unique
+    }
+
+    // Append counter to baseSlug if not unique
+    $alt_title = $baseSlug . '-' . $counter;
+    $counter++;
+}
+
+
+    // Directories for uploads
+    $uploadDir = 'uploads/';
+    $fileuploadDir = 'documents/';
+    $fileKey = 'images';
+    $message = "";
+
+    // Handle image uploads
+    if (empty($_FILES[$fileKey]['name'][0])) {
+        // Use default images if no images are uploaded
+        $defaultImages = ['default1.jpg', 'default2.jpg', 'default3.jpg', 'default4.jpg', 'default5.jpg'];
+        $randomImage = $defaultImages[array_rand($defaultImages)];
+        $reportImages = [$randomImage];
+    }else{
+
+    // Insert images into the database
+    $reportImages = handleMultipleFileUpload($fileKey, $uploadDir);
+    }
+
+    $uploadedFiles = [];
+    foreach ($reportImages as $image) {
+        $stmt = $con->prepare("INSERT INTO " . $siteprefix . "reports_images (report_id, picture, updated_at) VALUES (?, ?, current_timestamp())");
+        $stmt->bind_param("ss", $reportId, $image);
+        if ($stmt->execute()) {
+            $uploadedFiles[] = $image;
+        } else {
+            $message .= "Error inserting image: " . $stmt->error . "<br>";
+        }
+        $stmt->close();
+    }
+
+    // Handle file uploads for different document types
+    $fileFields = [
+        'file_word' => 'word',
+        'file_excel' => 'excel',
+        'file_pdf' => 'pdf',
+        'file_powerpoint' => 'powerpoint',
+        'file_text' => 'text'
+    ];
+
+    foreach ($fileFields as $fileField => $docType) {
+        if (isset($_FILES[$fileField]) && $_FILES[$fileField]['error'] == UPLOAD_ERR_OK) {
+            $filePath = handleFileUpload($fileField, $fileuploadDir);
+            $pagesField = 'pages_' . $docType;
+            $pages = isset($_POST[$pagesField]) ? (int)$_POST[$pagesField] : 0;
+
+            $stmt = $con->prepare("INSERT INTO " . $siteprefix . "reports_files (report_id, title, pages, updated_at) VALUES (?, ?, ?, current_timestamp())");
+            $stmt->bind_param("ssi", $reportId, $filePath, $pages);
+
+            if ($stmt->execute()) {
+                $message .= ucfirst($docType) . " file uploaded and record added successfully!<br>";
+            } else {
+                $message .= "Error uploading $docType file: " . $stmt->error . "<br>";
+            }
+
+            $stmt->close();
+        }
+    }
+
+     // 5. Handle guidance video upload
+  $guidance_video = '';
+if (!empty($_FILES['guidance_video']['name'])) {
+    $ext = strtolower(pathinfo($_FILES['guidance_video']['name'], PATHINFO_EXTENSION));
+    $guidance_video = uniqid('video_') . '.' . $ext;
+    $targetPath = 'uploads/' . $guidance_video;
+
+    if (move_uploaded_file($_FILES['guidance_video']['tmp_name'], $targetPath)) {
+        // File successfully uploaded
+        // Insert into database
+        $query = "INSERT INTO {$siteprefix}guidance (report_id,video_filename, uploaded_at) 
+                  VALUES ('$reportId','$guidance_video', NOW())";
+        mysqli_query($con, $query);
+    } else {
+        echo "Failed to upload video file.";
+    }
+}
+
+
+if (!empty($_POST['supportDocSelect']) && is_array($_POST['supportDocSelect'])) {
+    foreach ($_POST['supportDocSelect'] as $docTypeId) {
+        $docTypeId = mysqli_real_escape_string($con, $docTypeId);
+        $price = isset($_POST['support_prices'][$docTypeId]) ? mysqli_real_escape_string($con, $_POST['support_prices'][$docTypeId]) : '0';
+
+        // Check if a file was uploaded for this doc type
+        if (
+            isset($_FILES['support_files']['name'][$docTypeId]) &&
+            !empty($_FILES['support_files']['name'][$docTypeId]) &&
+            $_FILES['support_files']['error'][$docTypeId] == UPLOAD_ERR_OK
+        ) {
+            $fileName = $_FILES['support_files']['name'][$docTypeId];
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $newFileName = uniqid('doc_') . '.' . $ext;
+            $targetPath = 'uploads/' . $newFileName;
+            if (move_uploaded_file($_FILES['support_files']['tmp_name'][$docTypeId], $targetPath)) {
+                // Insert into doc_file table, now with price
+                $sql = "INSERT INTO {$siteprefix}doc_file (report_id, doc_typeid, filename, price, uploaded_at) 
+                        VALUES ('$reportId', '$docTypeId', '$newFileName', '$price', NOW())";
+                if (mysqli_query($con, $sql)) {
+                    $message .= "Other resource file uploaded and record added successfully!<br>";
+                } else {
+                    $message .= "Error inserting other resource file: " . mysqli_error($con) . "<br>";
+                }
+            } else {
+                $message .= "Failed to upload other resource file.<br>";
+            }
+        }
+    }
+}
+
+// Insert report data into the database
+   $sql = "INSERT INTO " . $siteprefix . "reports 
+        (id, title, description, methodology, use_case, category, subcategory, pricing, price, tags, loyalty, user, created_date, updated_date, status,alt_title) 
+        VALUES 
+        ('$reportId', '$title', '$description', '$methodology', '$resource_type', '$category', '$subcategory', '$pricing', '$price', '$tags', '$loyalty', '$user_id', current_timestamp(), current_timestamp(), '$status','$alt_title')";
+
+if (mysqli_query($con, $sql)) {
+    $message .= "Saved as draft successfully!<br>";
+
+/*
+
+        if ($status === 'approved') {
+            // Notify followers of the seller
+            $followersQuery = "SELECT user_id FROM " . $siteprefix . "followers WHERE seller_id = '$user_id'";
+            $followersResult = mysqli_query($con, $followersQuery);
+    
+            if ($followersResult && mysqli_num_rows($followersResult) > 0) {
+                // Fetch the seller's name
+                $sellerQuery = "SELECT display_name FROM " . $siteprefix . "users WHERE s = '$user_id'";
+                $sellerResult = mysqli_query($con, $sellerQuery);
+                $sellerRow = mysqli_fetch_assoc($sellerResult);
+                $sellerName = $sellerRow['display_name'];
+    
+                // Notify all followers of the seller
+                while ($follower = mysqli_fetch_assoc($followersResult)) {
+                    $followerId = $follower['user_id'];
+    
+                    // Fetch follower details
+                    $followerDetailsQuery = "SELECT email, display_name FROM " . $siteprefix . "users WHERE s = '$followerId'";
+                    $followerDetailsResult = mysqli_query($con, $followerDetailsQuery);
+                    $followerDetails = mysqli_fetch_assoc($followerDetailsResult);
+    
+                    $followerEmail = $followerDetails['email'];
+                    $followerName = $followerDetails['display_name'];
+    
+                    // Prepare the email
+                    $emailSubject = "New Resource Posted by $sellerName";
+                    $emailMessage = "
+                        <p>We are excited to inform you that $sellerName has just posted a new resource titled <strong>$title</strong>.</p>
+                        <p>You can check it out here: <a href='$siteurl/merchant-store.php?seller_id=$user_id'>$sellerName</a></p>
+                        <p>Thank you for following $sellerName!</p>";
+    
+                    // Send the email
+                    sendEmail($followerEmail, $followerName, $siteName, $siteMail, $emailMessage, $emailSubject);
+                   
+                    // Notify user
+                   insertAlert($con, $followerId, "New resource titled $title has been posted by $sellerName", $currentdatetime, 0);
+                }
+            }
+    
+            // Notify followers of the category
+            $categoryFollowersQuery = "SELECT user_id FROM " . $siteprefix . "followers WHERE category_id = '$category'";
+            $categoryFollowersResult = mysqli_query($con, $categoryFollowersQuery);
+    
+            if ($categoryFollowersResult && mysqli_num_rows($categoryFollowersResult) > 0) {
+                // Fetch category name for the email
+                $categoryQuery = "SELECT category_name FROM " . $siteprefix . "categories WHERE id = '$category'";
+                $categoryResult = mysqli_query($con, $categoryQuery);
+                $categoryRow = mysqli_fetch_assoc($categoryResult);
+                $categoryName = $categoryRow['category_name'];
+                $slugs = strtolower(str_replace(' ', '-', $categoryName));
+    
+                // Notify all users following the category
+                while ($follower = mysqli_fetch_assoc($categoryFollowersResult)) {
+                    $followerId = $follower['user_id'];
+    
+                    // Fetch follower details
+                    $followerDetailsQuery = "SELECT email, display_name FROM " . $siteprefix . "users WHERE s = '$followerId'";
+                    $followerDetailsResult = mysqli_query($con, $followerDetailsQuery);
+                    $followerDetails = mysqli_fetch_assoc($followerDetailsResult);
+    
+                    $followerEmail = $followerDetails['email'];
+                    $followerName = $followerDetails['display_name'];
+    
+                    // Prepare the email
+                    $emailSubject = "New Resource in $categoryName";
+                    $emailMessage = "
+                        <p>We are excited to inform you that a new resource titled <strong>$title</strong> has been added to the <strong>$categoryName</strong> category.</p>
+                        <p>You can check it out here: <a href='$siteurl/category.php/$slugs'>$categoryName</a></p>
+                        <p>Thank you for following the $categoryName category!</p>
+                    ";
+    
+                    // Send the email
+                    sendEmail($followerEmail, $followerName, $siteName, $siteMail, $emailMessage, $emailSubject);
+
+                     // Notify user
+                   insertAlert($con, $followerId, "New resource titled $title  under category $categoryName  has been posted", $currentdatetime, 0);
+                }
+            }
+        }
+
+        */
+    
+    } else {
+        $message .= "Error adding report: " . mysqli_error($con) . "<br>";
+    }
+
+    // Display success or error message
+    showSuccessModal('Processed', $message);
+    header("refresh:2; url=models.php");
+}
+
+
+//delete-record
+if (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    $table = $_GET['table'];
+    $item = $_GET['item'];
+    $page = $_GET['page'];
+    
+    if (deleteRecord($table, $item)) {
+        $message="Record deleted successfully.";
+    } else {
+         $message="Failed to delete the record.";
+    }
+
+    showToast($message);
+    header("refresh:2; url=$page");
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update-report'])) {
+    $message = "";
+    $hasError = false;
+    $reportId = $_POST['id'];
+    $title =  mysqli_real_escape_string($con,$_POST['title']);
+    $description = mysqli_real_escape_string($con, $_POST['description']);
+    $category = $_POST['category'];
+    $subcategory = isset($_POST['subcategory']) ? $_POST['subcategory'] : null;
+    $pricing = $_POST['pricing'];
+    $price = !empty($_POST['price']) ? $_POST['price'] : '0';
+    $tags = mysqli_real_escape_string($con,$_POST['tags']);
+    $loyalty = '';
+    $documentTypes = isset($_POST['documentSelect']) ? $_POST['documentSelect'] : [];
+  $status = "pending";
+    $methodology =  mysqli_real_escape_string($con, $_POST['methodology']);
+    $resource_type = implode(',',$_POST['resource_type']);
+    $user_id = $_POST['user'];
+
+    $siteline = $siteurl; // Replace with your site URL
+
+    // Upload images
+    $uploadDir = 'uploads/';
+    $fileuploadDir = 'documents/';
+    $fileKey='images';
+    global $fileName;
+    $message="";
+
+    
+    if (empty($_FILES[$fileKey]['name'][0])) {
+       // Array of default images
+     //  $defaultImages = ['default1.jpg', 'default2.jpg', 'default3.jpg', 'default4.jpg', 'default5.jpg'];
+        // Pick a random default image
+     //  $randomImage = $defaultImages[array_rand($defaultImages)];
+     //   $reportImages = [$randomImage];
+        $reportImages = [];
+    }else{
+    $reportImages = handleMultipleFileUpload($fileKey, $uploadDir);
+     }
+
+     $uploadedFiles = [];
+    foreach ($reportImages as $image) {
+        $stmt = $con->prepare("INSERT INTO  ".$siteprefix."reports_images (report_id, picture, updated_at) VALUES (?, ?, current_timestamp())");
+        $stmt->bind_param("ss", $reportId, $image);
+        if ($stmt->execute()) {
+            $uploadedFiles[] = $image;
+        } else {
+            $message.="Error: " . $stmt->error;
+            $hasError = true;
+        }
+        $stmt->close();
+    }
+
+    // Handle file uploads
+    $fileFields = [
+        'file_word' => 'word',
+        'file_excel' => 'excel',
+        'file_pdf' => 'pdf',
+        'file_powerpoint' => 'powerpoint',
+        'file_text' => 'text'
+    ];
+
+    foreach ($fileFields as $fileField => $docType) {
+        if (isset($_FILES[$fileField]) && $_FILES[$fileField]['error'] == UPLOAD_ERR_OK) {
+            $filePath = handleFileUpload($fileField, $fileuploadDir);
+            $pagesField = 'pages_' . $docType;
+            $pages = isset($_POST[$pagesField]) ? $_POST[$pagesField] : 0;
+
+            $stmt = $con->prepare("INSERT INTO  ".$siteprefix."reports_files (report_id, title, pages, updated_at) VALUES (?, ?, ?, current_timestamp())");
+            $stmt->bind_param("ssi", $reportId, $filePath, $pages);
+
+            if ($stmt->execute()) {
+                $message.="File uploaded and record added successfully!";
+            } else {
+                $message.="Error: " . $stmt->error;
+                $hasError = true;
+            }
+
+            $stmt->close();
+        }
+    }
+
+$guidance_video = '';
+
+if (!empty($_FILES['guidance_video']['name'])) {
+    $reportId = mysqli_real_escape_string($con, $reportId);
+
+    // Fetch current methodology
+    $methodologyCheck = mysqli_query($con, "SELECT methodology FROM {$siteprefix}reports WHERE id = '$reportId' LIMIT 1");
+    $methodologyRow = mysqli_fetch_assoc($methodologyCheck);
+    $currentMethodology = $methodologyRow['methodology'] ?? '';
+
+    if (!empty(trim($currentMethodology))) {
+        // Check if guidance video already exists
+        $guidanceCheck = mysqli_query($con, "SELECT video_filename FROM {$siteprefix}guidance WHERE report_id = '$reportId' LIMIT 1");
+
+        if (mysqli_num_rows($guidanceCheck) > 0) {
+            $message .= "A guidance video already exists for this report. Please delete the existing video before uploading a new one.<br>";
+            $hasError = true;
+        } else {
+            // No existing guidance video, clear methodology
+            $updateMethodology = mysqli_query($con, "UPDATE {$siteprefix}reports SET methodology = '' WHERE id = '$reportId'");
+            if (!$updateMethodology) {
+                $message .= "Failed to clear methodology.<br>";
+                $hasError = true;
+            }
+        }
+    }
+
+    // If no error so far, proceed with video upload
+    if (!$hasError) {
+        $ext = strtolower(pathinfo($_FILES['guidance_video']['name'], PATHINFO_EXTENSION));
+        $allowedExts = ['mp4', 'mov', 'avi', 'mkv'];
+
+        if (!in_array($ext, $allowedExts)) {
+            $message .= "Invalid file type. Only video files are allowed.<br>";
+            $hasError = true;
+        } else {
+            $guidance_video = uniqid('video_') . '.' . $ext;
+            $targetPath = 'uploads/' . $guidance_video;
+
+            if (move_uploaded_file($_FILES['guidance_video']['tmp_name'], $targetPath)) {
+                $insertQuery = "INSERT INTO {$siteprefix}guidance (report_id, video_filename, uploaded_at) 
+                                VALUES ('$reportId', '$guidance_video', NOW())";
+
+                if (!mysqli_query($con, $insertQuery)) {
+                    $message .= "Failed to insert guidance video into the database.<br>";
+                    $hasError = true;
+                }
+            } else {
+                $message .= "Failed to upload the video file.<br>";
+                $hasError = true;
+            }
+        }
+    }
+}
+
+// Check if user is trying to update methodology
+if (!empty(trim($methodology))) {
+    // Check if a guidance video exists for this report
+    $guidanceCheck = mysqli_query($con, "SELECT video_filename FROM {$siteprefix}guidance WHERE report_id = '$reportId' LIMIT 1");
+    if ($guidanceCheck && mysqli_num_rows($guidanceCheck) > 0) {
+        $message .= "A guidance video already exists for this report. Please delete the existing video before updating the methodology.<br>";
+        $hasError = true;
+    }
+}
+
+
+// Handle support documents
+if (!empty($_POST['supportDocSelect']) && is_array($_POST['supportDocSelect'])) {
+   $existingDocs = [];
+$existingDocsQuery = mysqli_query($con, "SELECT doc_typeid FROM {$siteprefix}doc_file WHERE report_id = '$reportId'");
+while ($row = mysqli_fetch_assoc($existingDocsQuery)) {
+    $existingDocs[] = $row['doc_typeid'];
+}
+
+// 2. Get selected docs from the form
+$selectedDocs = !empty($_POST['supportDocSelect']) && is_array($_POST['supportDocSelect']) ? $_POST['supportDocSelect'] : [];
+
+// 3. Handle update/insert for selected docs
+foreach ($selectedDocs as $docTypeId) {
+    $docTypeId = mysqli_real_escape_string($con, $docTypeId);
+    $supportPrices = isset($_POST['support_prices'][$docTypeId]) ? mysqli_real_escape_string($con, $_POST['support_prices'][$docTypeId]) : '0';
+
+    // Check if this doc already exists for this report
+    $checkSql = "SELECT s, filename FROM {$siteprefix}doc_file WHERE report_id = '$reportId' AND doc_typeid = '$docTypeId' LIMIT 1";
+    $checkResult = mysqli_query($con, $checkSql);
+
+    if ($checkResult && $row = mysqli_fetch_assoc($checkResult)) {
+        // Exists: update price and file if a new file is uploaded
+        $updateFile = $row['filename'];
+        if (
+            isset($_FILES['support_files']['name'][$docTypeId]) &&
+            !empty($_FILES['support_files']['name'][$docTypeId]) &&
+            $_FILES['support_files']['error'][$docTypeId] == UPLOAD_ERR_OK
+        ) {
+            $fileName = $_FILES['support_files']['name'][$docTypeId];
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $newFileName = uniqid('doc_') . '.' . $ext;
+            $targetPath = '../../documents/' . $newFileName;
+            if (move_uploaded_file($_FILES['support_files']['tmp_name'][$docTypeId], $targetPath)) {
+                $updateFile = $newFileName;
+            } else {
+                $message .= "Failed to upload new file for support doc.<br>";
+                $hasError = true;
+            }
+        }
+        // Update record
+        $sql = "UPDATE {$siteprefix}doc_file SET price='$supportPrices', filename='$updateFile', uploaded_at=NOW() WHERE report_id='$reportId' AND doc_typeid='$docTypeId'";
+        if (!mysqli_query($con, $sql)) {
+            $message .= "Error updating support doc: " . mysqli_error($con) . "<br>";
+            $hasError = true;
+        }
+    } else {
+        // Not exists: insert new record if a file is uploaded
+        if (
+            isset($_FILES['support_files']['name'][$docTypeId]) &&
+            !empty($_FILES['support_files']['name'][$docTypeId]) &&
+            $_FILES['support_files']['error'][$docTypeId] == UPLOAD_ERR_OK
+        ) {
+            $fileName = $_FILES['support_files']['name'][$docTypeId];
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $newFileName = uniqid('doc_') . '.' . $ext;
+            $targetPath = '../../documents/' . $newFileName;
+            if (move_uploaded_file($_FILES['support_files']['tmp_name'][$docTypeId], $targetPath)) {
+                $sql = "INSERT INTO {$siteprefix}doc_file (report_id, doc_typeid, filename, price, uploaded_at) 
+                        VALUES ('$reportId', '$docTypeId', '$newFileName', '$supportPrices', NOW())";
+                if (!mysqli_query($con, $sql)) {
+                    $message .= "Error inserting new support doc: " . mysqli_error($con) . "<br>";
+                    $hasError = true;
+                }
+            } else {
+                $message .= "Failed to upload new support doc file.<br>";
+                $hasError = true;
+            }
+        }
+    }
+}
+
+// 4. Delete docs that are no longer selected
+$docsToDelete = array_diff($existingDocs, $selectedDocs);
+foreach ($docsToDelete as $docTypeId) {
+    $docTypeId = mysqli_real_escape_string($con, $docTypeId);
+    $delSql = "DELETE FROM {$siteprefix}doc_file WHERE report_id='$reportId' AND doc_typeid='$docTypeId'";
+    if (!mysqli_query($con, $delSql)) {
+        $message .= "Error deleting unselected support doc: " . mysqli_error($con) . "<br>";
+        $hasError = true;
+    }
+}
+}
+    // Final update only if no error
+    if (!$hasError) {
+        $sql = "UPDATE ".$siteprefix."reports SET title='$title', description='$description', methodology='$methodology', use_case='$resource_type', category='$category', subcategory='$subcategory', pricing='$pricing', price='$price', tags='$tags', loyalty='$loyalty', user='$user_id', updated_date=current_timestamp(), status='$status' WHERE id = '$reportId'";
+        if (mysqli_query($con, $sql)) {
+            $message .= "Report updated successfully!";
+            showSuccessModal('Processed', $message);
+            header("refresh:2; url=models.php");
+       
+        } else {
+            $message .= "Error updating report: " . mysqli_error($con);
+            showErrorModal('Update Failed', $message);
+            header("refresh:2;");
+         
+        }
+    } else {
+        showErrorModal('Error Occurred', $message);
+        header("refresh:2;");
+      
+    }
+}
+
+
 //add dispute
 if (isset($_POST['create_dispute'])){
     $category = $_POST['category'];

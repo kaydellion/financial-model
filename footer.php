@@ -1,23 +1,4 @@
   <footer id="footer" class="footer">
-    <div class="footer-newsletter">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-8 text-center">
-            <h2>Join Our Newsletter</h2>
-            <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
-            <form action="forms/newsletter.php" method="post" class="php-email-form">
-              <div class="newsletter-form d-flex">
-                <input type="email" name="email" placeholder="Your email address" required="">
-                <button type="submit">Subscribe</button>
-              </div>
-              <div class="loading">Loading</div>
-              <div class="error-message"></div>
-              <div class="sent-message">Your subscription request has been sent. Thank you!</div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="footer-main">
       <div class="container">
@@ -29,10 +10,7 @@
               </a>
               <p><?php echo $sitedescription; ?></p>
               <div class="footer-contact mt-4">
-                <div class="contact-item">
-                  <i class="bi bi-geo-alt"></i>
-                  <span>123 Fashion Street, New York, NY 10001</span>
-                </div>
+           
                 <div class="contact-item">
                   <i class="bi bi-telephone"></i>
                   <span><?php echo $sitenumber; ?></span>
@@ -101,18 +79,6 @@
 
           <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="footer-widget">
-              <h4>Download Our App</h4>
-              <p>Shop on the go with our mobile app</p>
-              <div class="app-buttons">
-                <a href="#" class="app-btn">
-                  <i class="bi bi-apple"></i>
-                  <span>App Store</span>
-                </a>
-                <a href="#" class="app-btn">
-                  <i class="bi bi-google-play"></i>
-                  <span>Google Play</span>
-                </a>
-              </div>
               <div class="social-links mt-4">
                 <h5>Follow Us</h5>
                 <div class="social-icons">
@@ -146,13 +112,13 @@
         </div>
 
         <div class="legal-links">
-          <a href="tos.html">Terms of Service</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="tos.html">Cookies Settings</a>
+          <a href="<?php echo $siteurl; ?>terms">Terms of Service</a>
+          <a href="<?php echo $siteurl; ?>privacy">Privacy Policy</a>
+          <a href="<?php echo $siteurl; ?>cookie-policy">Cookies Settings</a>
         </div>
 
         <div class="copyright text-center">
-          <p>© <span>Copyright</span> <strong class="sitename">eStore</strong>. All Rights Reserved.</p>
+          <p>© <span>Copyright</span> <strong class="sitename"><?php echo $sitename; ?></strong>. All Rights Reserved.</p>
         </div>
 
         <div class="credits">
@@ -160,7 +126,7 @@
           <!-- You can delete the links only if you've purchased the pro version. -->
           <!-- Licensing information: https://bootstrapmade.com/license/ -->
           <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+       
         </div>
 
       </div>
@@ -177,6 +143,7 @@
   <!-- Vendor JS Files -->
    <script src="https://js.paystack.co/v1/inline.js"></script> 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>

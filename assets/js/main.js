@@ -1112,7 +1112,74 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+document.querySelectorAll('.deletefile').forEach(button => {
+  button.addEventListener('click', function() {
+      if (confirm('Are you sure you want to delete this file?')) {
+          let imageId = this.getAttribute('data-file-id');
+          fetch(`delete_image.php?action=deletefile&image_id=${imageId}`, {
+              method: 'GET'
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  this.closest('.file-preview').remove();
+                  showToast('File deleted successfully.');
+              } else {
+                  alert('Failed to delete file.');
+              }
+          })
+          .catch(error => {
+              console.error('Error deleting file:', error);
+          });
+      }
+  });
+});
 
+document.querySelectorAll('.delete-guidance-video').forEach(button => {
+  button.addEventListener('click', function() {
+      if (confirm('Are you sure you want to delete this file?')) {
+          let imageId = this.getAttribute('data-image-id');
+          fetch(`delete_image.php?action=deleteguidancevideo&image_id=${imageId}`, {
+              method: 'GET'
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  this.closest('.file-preview').remove();
+                  showToast('File deleted successfully.');
+              } else {
+                  alert('Failed to delete file.');
+              }
+          })
+          .catch(error => {
+              console.error('Error deleting file:', error);
+          });
+      }
+  });
+});
+
+document.querySelectorAll('.delete-image').forEach(button => {
+  button.addEventListener('click', function() {
+      if (confirm('Are you sure you want to delete this image?')) {
+          let imageId = this.getAttribute('data-image-id');
+          fetch(`delete_image?action=deleteimage&image_id=${imageId}`, {
+              method: 'GET'
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  this.closest('.image-preview').remove();
+                  showToast('Image deleted successfully.');
+              } else {
+                  alert('Failed to delete image.');
+              }
+          })
+          .catch(error => {
+              console.error('Error deleting image:', error);
+          });
+      }
+  });
+});
     document.addEventListener("DOMContentLoaded", function () {
         const paystackButton = document.querySelector(".paystack-button");
         const manualButton = document.querySelector(".manual-button");
@@ -1181,7 +1248,11 @@ function showToast(message) {
   const bootstrapToast = new bootstrap.Toast(toast, { delay: 5000 });
   bootstrapToast.show();
 }
-
+$(document).ready(function() {
+  $('.select-multiple').select2({
+    placeholder: "Select options"
+  });
+});
 //add to wishlist icon 
 $('.btn-wishlist').click(function(e) {
     e.preventDefault();
@@ -1397,20 +1468,199 @@ document.getElementById('webShareBtn').addEventListener('click', function() {
 });
 
 
-function getOrderDetails(orderId) {
-  $j.ajax({
-    url: 'get_order_details',
-    type: 'POST', 
-    data: { order_id: orderId },
-    success: function(response) {
-      $j('#orderDetails').html(response);
+
+document.getElementById('documentSelect').addEventListener('change', function() {
+  console.log('Document select changed');
+  const selectedOptions = Array.from(this.selectedOptions).map(option => option.value);
+  console.log('Selected options:', selectedOptions);
+  const pageInputsDiv = document.getElementById('pageInputs');
+
+  // Loop through existing inputs and remove the ones for deselected options
+  Array.from(pageInputsDiv.children).forEach(child => {
+    const inputName = child.getAttribute('data-doc-type');
+    console.log('Checking input:', inputName);
+    if (!selectedOptions.includes(inputName)) {
+      console.log('Removing input for:', inputName);
+      child.remove();
+    }
+  });
+
+  // Add inputs for newly selected options
+  selectedOptions.forEach(docType => {
+    console.log('Processing doc type:', docType);
+    if (!document.querySelector(`[data-doc-type="${docType}"]`)) {
+      console.log('Creating new input group for:', docType);
+      const inputGroup = document.createElement('div');
+      inputGroup.className = 'input-group mb-3';
+      inputGroup.setAttribute('data-doc-type', docType);
+
+      const fileLabel = document.createElement('span');
+      fileLabel.className = 'input-group-text';
+      fileLabel.textContent = `Upload ${docType}:`;
+
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.className = 'form-control';
+      fileInput.name = `file_${docType}`;
+      fileInput.accept = getAcceptedFormats(docType);
+
+      const pageLabel = document.createElement('span');
+      pageLabel.className = 'input-group-text';
+      pageLabel.textContent = `Pages for ${docType}:`;
+
+      const pageInput = document.createElement('input');
+      pageInput.type = 'number';
+      pageInput.className = 'form-control';
+      pageInput.min = '1';
+      pageInput.name = `pages_${docType}`;
+      pageInput.required = true;
+
+      inputGroup.appendChild(fileLabel);
+      inputGroup.appendChild(fileInput);
+      inputGroup.appendChild(pageLabel);
+      inputGroup.appendChild(pageInput);
+      pageInputsDiv.appendChild(inputGroup);
+    }
+  });
+});
+
+function handleDocumentSelect(selectElement) {
+  console.log('Document select changed');
+  const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.value);
+  console.log('Selected options:', selectedOptions);
+  const pageInputsDiv = document.getElementById('pageInputs');
+
+  // Loop through existing inputs and remove the ones for deselected options
+  Array.from(pageInputsDiv.children).forEach(child => {
+      const inputName = child.getAttribute('data-doc-type');
+      if (!selectedOptions.includes(inputName)) {
+          child.remove();
+      }
+  });
+
+  // Add inputs for newly selected options
+  selectedOptions.forEach(docType => {
+      if (!document.querySelector(`[data-doc-type="${docType}"]`)) {
+          // Create container div
+          const inputContainer = document.createElement('div');
+          inputContainer.className = 'mb-3';
+          inputContainer.setAttribute('data-doc-type', docType);
+
+          // Create label and file input
+          const fileLabel = document.createElement('label');
+          fileLabel.className = 'form-label';
+          fileLabel.textContent = `Upload ${docType}:`;
+
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.className = 'form-control';
+          fileInput.name = `file_${docType}`;
+          fileInput.accept = getAcceptedFormats(docType);
+
+          // Create label and page input
+          const pageLabel = document.createElement('label');
+          pageLabel.className = 'form-label mt-2';
+          pageLabel.textContent = `Number of Pages for ${docType}:`;
+
+          const pageInput = document.createElement('input');
+          pageInput.type = 'number';
+          pageInput.className = 'form-control';
+          pageInput.min = '1';
+          pageInput.name = `pages_${docType}`;
+          pageInput.required = true;
+
+          // Append elements
+          inputContainer.appendChild(fileLabel);
+          inputContainer.appendChild(fileInput);
+          inputContainer.appendChild(pageLabel);
+          inputContainer.appendChild(pageInput);
+          pageInputsDiv.appendChild(inputContainer);
+      }
+  });
+}
+
+
+// Function to return accepted file formats
+function getAcceptedFormats(docType) {
+    const formats = {
+        word: ".doc,.docx",
+        excel: ".xls,.xlsx",
+        googleSheets: ".xlsx,.csv,.tsv,.ods,.pdf",
+        powerpoint: ".ppt,.pptx",
+        pdf: ".pdf",
+        text: ".txt",
+        zip: ".zip,.rar,.tgz,.tar,.gz",
+    };
+    return formats[docType] || "*";
+}
+
+
+ 
+function togglePast() {
+  const pricingType = document.getElementById('resourceType');
+  const priceField = document.getElementById('past-field');
+
+  // Convert selected options to array of values
+  const selectedValues = Array.from(pricingType.selectedOptions).map(opt => opt.value);
+
+  // Check if '19' is one of the selected values
+  if (selectedValues.includes('19')) {
+    priceField.style.display = 'block';
+  } else {
+    priceField.style.display = 'none';
+  }
+}
+
+function togglePrice() {
+  const pricingType = document.getElementById('pricing-type');
+  const priceField = document.getElementById('price-field');
+  priceField.style.display = pricingType.value === 'paid' ? 'block' : 'none';
+}
+
+
+
+function handleGuidanceSelect(select) {
+  // Hide both fields and remove required attribute
+  document.getElementById('methodologyBox').style.display = 'none';
+  document.getElementById('videoBox').style.display = 'none';
+  document.getElementById('basic-default-message').required = false;
+  document.getElementById('guidanceVideo').required = false;
+
+  if (select.value === 'methodology') {
+    document.getElementById('methodologyBox').style.display = 'block';
+    document.getElementById('basic-default-message').required = true;
+  } else if (select.value === 'video') {
+    document.getElementById('videoBox').style.display = 'block';
+    document.getElementById('guidanceVideo').required = true;
+  }
+}
+
+function handleSupportDocSelect(select) {
+  const selected = Array.from(select.selectedOptions).map(opt => opt.value);
+
+  document.querySelectorAll('.supportDocFileInput').forEach(div => {
+    div.style.display = 'none';
+    const fileInput = div.querySelector('input[type="file"]');
+    const priceInput = div.querySelector('input[type="number"]');
+    if (fileInput) fileInput.required = false;
+    if (priceInput) priceInput.required = false;
+  });
+
+  selected.forEach(key => {
+    const inputDiv = document.getElementById('fileInput_' + key);
+    if (inputDiv) {
+      inputDiv.style.display = 'block';
+      const fileInput = inputDiv.querySelector('input[type="file"]');
+      const priceInput = inputDiv.querySelector('input[type="number"]');
+      // Only require file if there is NO existing file link
+      const hasExistingFile = !!inputDiv.querySelector('a.btn-outline-secondary');
+      if (fileInput) fileInput.required = !hasExistingFile;
+      if (priceInput) priceInput.required = true;
     }
   });
 }
 
-// Run on page load if order_id exists
-$j(document).ready(function() {
-  const orderId = $j('#order_id').val();
-    getOrderDetails(orderId);
-});
+
+
+
 

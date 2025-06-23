@@ -461,6 +461,24 @@ function redirectToDashboardIfSubAdmin() {
     }
 }
 
+function sellerDisplay() {
+    $sellerexist = getUserSeller();
+    if ($sellerexist) {
+        return ''; // Hide the element
+    }else {
+        return 'd-none'; // Show the element
+    }  
+}
+//if user is a seller
+function userDisplay() {
+    $sellerexist = getUserSeller();
+    if ($sellerexist) {
+        return 'd-none'; // Hide the element
+    }else {
+        return ''; // Show the element
+    }  
+}
+
 
 function formatNumber($number, $no = 2) {
     if (!is_numeric($number) || !is_numeric($no)) {
@@ -510,6 +528,7 @@ function handleFileUpload($fileKey, $uploadDir, $fileName = null) {
         return "No file uploaded or an error occurred.";
     }
 }
+
 
 
 function ifLoggedin($active_log){

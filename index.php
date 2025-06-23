@@ -166,6 +166,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     </section><!-- /Best Sellers Section -->
 
+    
+
     <!---- register propmt -->
 
 <section class="register-prompt section">

@@ -1,5 +1,28 @@
 <?php
+// Query to count total users
+$totalUsersQuery = "SELECT COUNT(*) AS total_users FROM ".$siteprefix."users WHERE type != 'admin'"; 
+$totalUsersResult = mysqli_query($con, $totalUsersQuery);
+$totalUsers = mysqli_fetch_assoc($totalUsersResult)['total_users'];
 
+// Query to calculate total profit
+$totalProfitQuery = "SELECT SUM(amount) AS total_profit FROM ".$siteprefix."profits";
+$totalProfitResult = mysqli_query($con, $totalProfitQuery);
+$totalProfit = mysqli_fetch_assoc($totalProfitResult)['total_profit'];
+
+// Query to count total reports
+$totalReportsQuery = "SELECT COUNT(*) AS total_reports FROM ".$siteprefix."reports";
+$totalReportsResult = mysqli_query($con, $totalReportsQuery);
+$totalReports = mysqli_fetch_assoc($totalReportsResult)['total_reports'];
+
+// Query to count total sales (paid orders)
+$totalSalesQuery = "SELECT COUNT(order_id) AS total_sales FROM ".$siteprefix."orders WHERE status = 'paid'";
+$totalSalesResult = mysqli_query($con, $totalSalesQuery);
+$totalSales = mysqli_fetch_assoc($totalSalesResult)['total_sales'];
+
+// Query to fetch pending reports count
+$pendingReportsQuery = "SELECT COUNT(*) AS count FROM " . $siteprefix . "reports WHERE status = 'pending'";
+$pendingReportsResult = mysqli_query($con, $pendingReportsQuery);
+$pendingReportsCount = mysqli_fetch_assoc($pendingReportsResult)['count'];
 
 // Query to fetch pending payments count
 $pendingPaymentsQuery = "SELECT COUNT(*) AS count FROM " . $siteprefix . "manual_payments WHERE status = 'pending'";
@@ -10,6 +33,21 @@ $pendingPaymentsCount = mysqli_fetch_assoc($pendingPaymentsResult)['count'];
 $approvedPaymentsQuery = "SELECT COUNT(*) AS count FROM " . $siteprefix . "manual_payments WHERE status = 'approved'";
 $approvedPaymentsResult = mysqli_query($con, $approvedPaymentsQuery);
 $clearedOrdersCount = mysqli_fetch_assoc($approvedPaymentsResult)['count'];
+
+// Query to fetch pending withdrawals count
+$pendingWithdrawalsQuery = "SELECT COUNT(*) AS count FROM " . $siteprefix . "withdrawal WHERE status = 'pending'";
+$pendingWithdrawalsResult = mysqli_query($con, $pendingWithdrawalsQuery);
+$pendingWithdrawalsCount = mysqli_fetch_assoc($pendingWithdrawalsResult)['count'];
+
+// Query to fetch pending disputes count
+$pendingDisputesQuery = "SELECT COUNT(*) AS count FROM " . $siteprefix . "disputes WHERE status = 'pending'";
+$pendingDisputesResult = mysqli_query($con, $pendingDisputesQuery);
+$pendingDisputesCount = mysqli_fetch_assoc($pendingDisputesResult)['count'];
+
+
+$sql = "SELECT * FROM  ".$siteprefix."alerts WHERE status='0' ORDER BY s DESC LIMIT 5";
+$sql2 = mysqli_query($con,$sql);
+$notification_count = mysqli_num_rows($sql2);
 
 //read message
 
