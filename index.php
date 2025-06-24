@@ -224,7 +224,7 @@ while ($row = mysqli_fetch_assoc($result)) {
           },
           "breakpoints": {
             "320": {
-              "slidesPerView": 1,
+              "slidesPerView": 2,
               "spaceBetween": 10
             },
             "576": {

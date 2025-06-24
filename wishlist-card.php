@@ -20,7 +20,7 @@ while ($imgRow = mysqli_fetch_assoc($result_images)) {
 ?>
 
           <!-- Product 1 -->
-          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
             <div class="product-card">
               <div class="product-image">
                   <?php if (!empty($images)): ?>
