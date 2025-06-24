@@ -153,7 +153,7 @@ if (in_array($current_page, $excluded_pages)) {
     <li class="bg-primary text-white p-2 me-2">
       <a class="text-white text-small" href="<?php echo $siteurl; ?>affiliate-details.php">Affiliate Program</a>
     </li>
-    <li class="bg-secondary text-white p-2 me-2">
+    <li class="bg-secondary text-white p-2 me-2 ">
       <a class="text-white text-small" href="<?php echo $siteurl; ?>marketplace.php">Marketplace</a>
     </li>
   </ul>
