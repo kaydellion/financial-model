@@ -229,7 +229,7 @@ if (in_array($current_page, $excluded_pages)) {
         </a>
       </div>
       <div class="dropdown-footer">
-        <a href="logout.php" class="btn btn-primary w-100 mb-2">Log Out</a>
+        <a href="<?php echo $siteurl; ?>logout.php" class="btn btn-primary w-100 mb-2">Log Out</a>
       </div>
     <?php } ?>
 </div>
@@ -243,13 +243,13 @@ if (isset($user_id) && !empty($user_id)) {
     if ($wishlist_count === null) $wishlist_count = 0;
 }
 ?>
-          <a href="my_wishlist" class="header-action-btn d-none d-md-block">
+          <a href="<?php echo $siteurl; ?>my_wishlist" class="header-action-btn d-none d-md-block">
   <i class="bi bi-heart"></i>
   <span class="badge wishlist-count"><?php echo $wishlist_count; ?></span>
 </a>
 
             <!-- Cart -->
-            <a href="cart.php" class="header-action-btn">
+            <a href="<?php echo $siteurl; ?>cart.php" class="header-action-btn">
                <?php
                 $cart_count = getCartCount($con, $siteprefix, $order_id);
                      ?>
