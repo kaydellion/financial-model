@@ -42,11 +42,7 @@ $show="none"; $textshow="none";
                     <i class="bi bi-box-arrow-in-right me-1"></i>Login
                   </button>
                 </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-register-registration-form" type="button" role="tab" aria-selected="false">
-                    <i class="bi bi-person-plus me-1"></i>Register
-                  </button>
-                </li>
+                
               </ul>
 
               <!-- Tab Content -->
@@ -83,62 +79,7 @@ $show="none"; $textshow="none";
                   </form>
                 </div>
 
-                <!-- Registration Form -->
-                <div class="tab-pane fade" id="login-register-registration-form" role="tabpanel">
-                  <form>
-                    <div class="row g-3">
-                      <div class="col-sm-6">
-                        <div class="mb-4">
-                          <label for="login-register-reg-firstname" class="form-label">First name</label>
-                          <input type="text" class="form-control" id="login-register-reg-firstname" required="">
-                        </div>
-                      </div>
-
-                      <div class="col-sm-6">
-                        <div class="mb-4">
-                          <label for="login-register-reg-lastname" class="form-label">Last name</label>
-                          <input type="text" class="form-control" id="login-register-reg-lastname" required="">
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <div class="mb-4">
-                          <label for="login-register-reg-email" class="form-label">Email address</label>
-                          <input type="email" class="form-control" id="login-register-reg-email" required="">
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <div class="mb-4">
-                          <label for="login-register-reg-password" class="form-label">Password</label>
-                          <input type="password" class="form-control" id="login-register-reg-password" required="">
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <div class="mb-4">
-                          <label for="login-register-reg-confirm-password" class="form-label">Confirm password</label>
-                          <input type="password" class="form-control" id="login-register-reg-confirm-password" required="">
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <div class="form-check">
-                          <input type="checkbox" class="form-check-input" id="login-register-terms" required="">
-                          <label class="form-check-label" for="login-register-terms">
-                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                          </label>
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <div class="d-grid">
-                          <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+              
 
               </div>
 
