@@ -52,7 +52,7 @@
                     $category_name = $row['name'];
                     $alt_names = $row['slug'];
                     $slugs = $alt_names;
-                    echo '<li><a href="'.$siteurl.'use-case?use-cases=' . $slugs . '">' . $category_name . '</a></li>';
+                    echo '<li><a href="'.$siteurl.'use-case/' . $slugs . '">' . $category_name . '</a></li>';
                 }
                 ?>
               </ul>

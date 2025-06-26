@@ -713,14 +713,14 @@ if (isset($_POST['submit_report'])) {
         $statusAction = "Success!";
         $statusMessage = "Your report for <strong>$product_title</strong> has been submitted successfully.";
         showSuccessModal($statusAction, $statusMessage);
-        header("refresh:2; url=product?slug=$product_alt_title");
+        header("refresh:2; url=product/$product_alt_title");
 
     } else {
         // Error message
         $statusAction = "Error!";
         $statusMessage = "An error occurred while submitting your report. Please try again.";
         showErrorModal($statusAction, $statusMessage);
-        header("refresh:2; url=product?slug=$product_alt_title");
+        header("refresh:2; url=product/$product_alt_title");
 
     }
 }

@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_affiliate_list'
         $slug =$alt_title;
 
         // Generate the affiliate link
-        $affiliate_link = $siteurl . "product?slug=" . $slug . "&affiliate=" . base64_encode($affliate_id);
+        $affiliate_link = $siteurl . "product/" . $slug . "&affiliate=" . base64_encode($affliate_id);
 
         // Add product to affiliate's list
         $insert_query = "INSERT INTO " . $siteprefix . "affiliate_products (user_id, product_id, affiliate_link, affiliate_id) 

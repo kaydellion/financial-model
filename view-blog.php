@@ -112,13 +112,13 @@ if (!empty($current_categories)) {
     <i class="bi bi-share-fill"></i> Share
   </button>
   <!-- Social Links -->
-  <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($siteurl . 'view-blog.php?blogslug=' . $raw_slug); ?>&text=<?php echo urlencode($current_title); ?>" target="_blank" rel="noopener" title="Share on Twitter">
+  <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($siteurl . 'view-blog.php/' . $raw_slug); ?>&text=<?php echo urlencode($current_title); ?>" target="_blank" rel="noopener" title="Share on Twitter">
     <i class="bi bi-twitter"></i>
   </a>
-  <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($siteurl . 'view-blog.php?blogslug=' . $raw_slug); ?>" target="_blank" rel="noopener" title="Share on Facebook">
+  <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($siteurl . 'view-blog.php/' . $raw_slug); ?>" target="_blank" rel="noopener" title="Share on Facebook">
     <i class="bi bi-facebook"></i>
   </a>
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($siteurl . 'view-blog.php?blogslug=' . $raw_slug); ?>&title=<?php echo urlencode($current_title); ?>" target="_blank" rel="noopener" title="Share on LinkedIn">
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($siteurl . 'view-blog.php/' . $raw_slug); ?>&title=<?php echo urlencode($current_title); ?>" target="_blank" rel="noopener" title="Share on LinkedIn">
     <i class="bi bi-linkedin"></i>
   </a>
 </div>
@@ -310,7 +310,7 @@ if (!empty($current_categories)) {
       echo '<div class="post-item">';
       echo '<img src="'.htmlspecialchars($img).'" alt="" class="flex-shrink-0" style="width:60px;height:60px;object-fit:cover;">';
       echo '<div>';
-      echo '<h4><a href="view-blog.php?blogslug='.$slug.'">'.$title.'</a></h4>';
+      echo '<h4><a href="view-blog.php/'.$slug.'">'.$title.'</a></h4>';
       echo '<time datetime="'.$recent['created_at'].'">'.$date.'</time>';
       echo '</div></div>';
   }

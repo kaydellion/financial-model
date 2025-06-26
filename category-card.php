@@ -6,6 +6,6 @@
                 <h3 class="category-title">
                                 <?php echo $category_name; ?>
                           </h3>
-                <a href="category.php?slugs=<?php echo $slugs; ?>" class="stretched-link"></a>
+                <a href="category.php/=<?php echo $slugs; ?>" class="stretched-link"></a>
               </div>
             </div>

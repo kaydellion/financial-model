@@ -41,7 +41,7 @@ while ($img_row = mysqli_fetch_assoc($img_query)) {
                 <?php if ($loyalty == 1): ?>
                 <span class="badge bg-danger mb-1">Loyalty Material</span>
                 <?php endif; ?>
-                <h3 class="product-title"><a href="<?php echo $siteurl; ?>product?slug=<?php echo $alt_title; ?>"><?php echo $title; ?></a></h3>
+                <h3 class="product-title"><a href="<?php echo $siteurl; ?>product/<?php echo $alt_title; ?>"><?php echo $title; ?></a></h3>
                 <p>
 
     <?php if (!empty($selected_resource_type)) { ?>

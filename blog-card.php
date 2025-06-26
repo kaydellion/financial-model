@@ -1,6 +1,6 @@
 
 <div class="col-lg-4">
-    <a href="view-blog?blogslug=<?php echo $alt_title; ?>">
+    <a href="view-blog/<?php echo $alt_title; ?>">
   <article class="post-item side-post">
     <div class="post-img">
   <img src="<?php echo $image_path; ?>" alt="" class="img-fluid">
@@ -10,7 +10,7 @@
       <?php endforeach; ?>
 </div></div>
     <h2 class="title">
-      <a href="view-blog?blogslug=<?php echo $alt_title; ?>"><?php echo $title; ?></a>
+      <a href="view-blog/<?php echo $alt_title; ?>"><?php echo $title; ?></a>
     </h2>
     <div class="d-flex align-items-center">
       <img src="<?php echo $siteurl;?>/img/<?php echo $siteimg; ?>" alt="site image" class="img-fluid post-author-img flex-shrink-0">

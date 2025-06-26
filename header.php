@@ -292,7 +292,7 @@ if (isset($user_id) && !empty($user_id)) {
       while ($row = mysqli_fetch_array($sql2)) {
           $category_name = $row['category_name'];
           $slugs = $row['slug'];
-          echo '<li><a href="' . $siteurl . 'category?slugs=' . $slugs . '">' . $category_name . '</a></li>';
+          echo '<li><a href="' . $siteurl . 'category/' . $slugs . '">' . $category_name . '</a></li>';
       }
     ?>
     <li>
@@ -310,7 +310,7 @@ if (isset($user_id) && !empty($user_id)) {
             $category_name = $row['category_name'];
             $slugs = $row['slug'];
             echo '<div class="col-md-4 col-6 mb-1">';
-            echo '<a class="dropdown-item" style="white-space: normal;" href="' . $siteurl . 'category?slugs=' . $slugs . '">' . $category_name . '</a>';
+            echo '<a class="dropdown-item" style="white-space: normal;" href="' . $siteurl . 'category/' . $slugs . '">' . $category_name . '</a>';
             echo '</div>';
             $count++;
         }

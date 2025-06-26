@@ -1460,7 +1460,7 @@ document.getElementById('webShareBtn').addEventListener('click', function() {
     navigator.share({
       title: "<?php echo addslashes($current_title); ?>",
       text: "<?php echo addslashes($current_title); ?>",
-      url: "<?php echo $siteurl . 'view-blog.php?blogslug=' . $raw_slug; ?>"
+      url: "<?php echo $siteurl . 'view-blog.php/' . $raw_slug; ?>"
     });
   } else {
     alert('Sharing is not supported in this browser. Please use the social icons.');
