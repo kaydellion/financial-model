@@ -42,6 +42,10 @@ if (!empty($current_categories)) {
     $current_image = $imagePath.$forum['featured_image'] ?? '';
     $date = date('d M Y', strtotime($forum['created_at'] ?? ''));
 }
+
+$countRes = mysqli_query($con, "SELECT COUNT(*) as cnt FROM fm_comments WHERE blog_id='$forum_id'");
+$countRow = mysqli_fetch_assoc($countRes);
+$comment_count = $countRow['cnt'];
 }
 ?>
   <main class="main">
@@ -71,8 +75,8 @@ if (!empty($current_categories)) {
               <article class="article">
 
                 <div class="post-img">
-         
-<img src="<?php echo $current_image; ?>" alt="Featured blog image" class="img-fluid" loading="lazy">
+
+<img src="<?php echo $siteurl . $current_image; ?>" alt="Featured blog image" class="img-fluid" loading="lazy">
                 </div>
 
                 <div class="article-content" data-aos="fade-up" data-aos-delay="100">
@@ -93,7 +97,16 @@ if (!empty($current_categories)) {
                       </li>
                       <li class="d-flex align-items-center">
                         <i class="bi bi-chat-dots"></i>
-                        <a href="#comments">24 Comments</a>
+                        <a href="#comments">
+              <?php
+                  if ($comment_count == 0) {
+                      echo "No Comments";
+                  } elseif ($comment_count == 1) {
+                      echo "1 Comment";
+                  } else {
+                      echo $comment_count . " Comments";
+                  }
+                ?></a>
                       </li>
                     </ul>
                   </div>
@@ -308,7 +321,7 @@ if (!empty($current_categories)) {
       $slug = htmlspecialchars($recent['slug']);
       $date = date('M j, Y', strtotime($recent['created_at']));
       echo '<div class="post-item">';
-      echo '<img src="'.htmlspecialchars($img).'" alt="" class="flex-shrink-0" style="width:60px;height:60px;object-fit:cover;">';
+      echo '<img src="'.$siteurl.htmlspecialchars($img).'" alt="" class="flex-shrink-0" style="width:60px;height:60px;object-fit:cover;">';
       echo '<div>';
       echo '<h4><a href="view-blog.php/'.$slug.'">'.$title.'</a></h4>';
       echo '<time datetime="'.$recent['created_at'].'">'.$date.'</time>';

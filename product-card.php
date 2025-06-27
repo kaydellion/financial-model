@@ -23,9 +23,9 @@ while ($imgRow = mysqli_fetch_assoc($result_images)) {
             <div class="product-card">
               <div class="product-image">
                   <?php if (!empty($images)): ?>
-    <img src="<?php echo $images[0]; ?>" class="img-fluid default-image" alt="Product" loading="lazy">
+    <img src="<?php echo $siteurl . $images[0]; ?>" class="img-fluid default-image" alt="Product" loading="lazy">
     <?php if (count($images) > 1): ?>
-      <img src="<?php echo $images[1]; ?>" class="img-fluid hover-image" alt="Product hover" loading="lazy">
+      <img src="<?php echo $siteurl . $images[1]; ?>" class="img-fluid hover-image" alt="Product hover" loading="lazy">
     <?php endif; ?>
 
   <?php endif; ?>
@@ -54,7 +54,7 @@ while ($imgRow = mysqli_fetch_assoc($result_images)) {
 
     </p>
                   <div class="user_info mb-1">
-                            <img src="<?php echo $user_picture; ?>" alt="<?php echo $user; ?>" class="img-fluid user-image">
+                            <img src="<?php echo $siteurl . $user_picture; ?>" alt="<?php echo $user; ?>" class="img-fluid user-image">
                             <span><?php echo $user; ?></span>
                             </div>
                 <div class="product-price">
