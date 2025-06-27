@@ -125,7 +125,7 @@ if (in_array($current_page, $excluded_pages)) {
    
 
   <!-- Main CSS File -->
-  <link href="<?php echo $siteurl;assets/css/main.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/css/main.css" rel="stylesheet">
   
 
   <!-- =======================================================
