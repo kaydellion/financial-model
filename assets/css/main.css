@@ -3736,7 +3736,7 @@ section,
 .product-details .product-details-tabs .product-reviews .review-form-container .form-control {
   padding: 0.75rem 1rem;
   border-radius: 6px;
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 80%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   background-color: var(--background-color);
   transition: all 0.3s ease;
 }
@@ -3911,7 +3911,7 @@ section,
   height: 44px;
   color: var(--default-color);
   background-color: var(--surface-color);
-  border-color: color-mix(in srgb, var(--default-color), transparent 85%);
+  border-color: rgba(0, 0, 0, 0.08);
   border-radius: 8px 0 0 8px;
 }
 
@@ -4766,7 +4766,7 @@ section,
   color: var(--default-color);
   background-color: var(--surface-color);
   font-size: 0.875rem;
-  border-color: color-mix(in srgb, var(--default-color), transparent 80%);
+  border-color: rgba(0, 0, 0, 0.08);
   padding-left: 1.25rem;
   border-radius: 2rem 0 0 2rem;
 }
@@ -5223,7 +5223,7 @@ section,
 
 .checkout .checkout-section .section-content .form-group .form-control,
 .checkout .checkout-section .section-content .form-group .form-select {
-  border: 2px solid color-mix(in srgb, var(--default-color), transparent 85%);
+  border: 2px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   padding: 12px 16px;
   font-size: 0.95rem;
@@ -5234,7 +5234,7 @@ section,
 
 .checkout .checkout-section .section-content .form-group .form-control:hover,
 .checkout .checkout-section .section-content .form-group .form-select:hover {
-  border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 .checkout .checkout-section .section-content .form-group .form-control:focus,
@@ -5613,7 +5613,7 @@ section,
 }
 
 .checkout .order-summary .order-summary-content .promo-code .input-group .form-control {
-  border: 2px solid color-mix(in srgb, var(--default-color), transparent 85%);
+  border: 2px solid rgba(0, 0, 0, 0.08);
   border-right: none;
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
@@ -6041,7 +6041,7 @@ section,
   color: var(--default-color);
   background-color: var(--surface-color);
   font-size: 14px;
-  border-color: color-mix(in srgb, var(--default-color), transparent 80%);
+  border-color:rgba(0, 0, 0, 0.08);
   padding: 12px 20px;
   border-radius: 50px 0 0 50px;
   border-right: none;
@@ -6049,7 +6049,7 @@ section,
 }
 
 .search-results-header .search-form .form-control:focus {
-  border-color: var(--accent-color);
+  border-color: rgba(0, 0, 0, 0.08);
   box-shadow: none;
 }
 
@@ -7786,7 +7786,7 @@ section,
 }
 
 .account .settings-content .settings-form .form-control:focus {
-  border-color: var(--accent-color);
+  border-color:#212529;
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 90%);
 }
 
@@ -7953,7 +7953,7 @@ section,
 
 .login-register .form-control {
   border-radius: 12px;
-  border: 2px solid #212529;
+  border: 2px solid #474747;
   padding: 0.875rem 1.25rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -8029,7 +8029,7 @@ section,
 }
 
 .login-register .btn-primary {
-  background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 25%));
+  background:#F57C00;
   border: none;
   padding: 1rem 2rem;
   font-weight: 600;
@@ -8094,6 +8094,8 @@ section,
 
   .login-register .form-control {
     font-size: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
   }
 }
 
@@ -11654,7 +11656,7 @@ width:0px;
 }
 
 .error-404 .search-box .form-control {
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   color: var(--default-color);
@@ -11939,7 +11941,7 @@ width:0px;
 .pricing-range-widget .price-range-container .price-inputs .input-group-text {
   background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
   color: var(--heading-color);
-  border-color: color-mix(in srgb, var(--default-color), transparent 80%);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 .pricing-range-widget .price-range-container .price-inputs .form-control {
