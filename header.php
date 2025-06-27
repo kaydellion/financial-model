@@ -105,8 +105,8 @@ if (in_array($current_page, $excluded_pages)) {
   <meta name="keywords" content=""> 
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="<?php echo $siteurl;?>assets/img/favicon.png" rel="icon">
+  <link href="<?php echo $siteurl;?>assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -114,13 +114,13 @@ if (in_array($current_page, $excluded_pages)) {
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/vendor/aos/aos.css" rel="stylesheet">
   
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="<?php echo $siteurl;?>assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
    
 
@@ -229,7 +229,7 @@ if (in_array($current_page, $excluded_pages)) {
         </a>
       </div>
       <div class="dropdown-footer">
-        <a href="logout.php" class="btn btn-primary w-100 mb-2">Log Out</a>
+        <a href="<?php echo $siteurl; ?>logout.php" class="btn btn-primary w-100 mb-2">Log Out</a>
       </div>
     <?php } ?>
 </div>
@@ -243,13 +243,13 @@ if (isset($user_id) && !empty($user_id)) {
     if ($wishlist_count === null) $wishlist_count = 0;
 }
 ?>
-          <a href="my_wishlist" class="header-action-btn d-none d-md-block">
+          <a href="<?php echo $siteurl; ?>my_wishlist" class="header-action-btn d-none d-md-block">
   <i class="bi bi-heart"></i>
   <span class="badge wishlist-count"><?php echo $wishlist_count; ?></span>
 </a>
 
             <!-- Cart -->
-            <a href="cart.php" class="header-action-btn">
+            <a href="<?php echo $siteurl; ?>cart.php" class="header-action-btn">
                <?php
                 $cart_count = getCartCount($con, $siteprefix, $order_id);
                      ?>
@@ -292,7 +292,7 @@ if (isset($user_id) && !empty($user_id)) {
       while ($row = mysqli_fetch_array($sql2)) {
           $category_name = $row['category_name'];
           $slugs = $row['slug'];
-          echo '<li><a href="' . $siteurl . 'category?slugs=' . $slugs . '">' . $category_name . '</a></li>';
+          echo '<li><a href="' . $siteurl . 'category/' . $slugs . '">' . $category_name . '</a></li>';
       }
     ?>
     <li>
@@ -310,7 +310,7 @@ if (isset($user_id) && !empty($user_id)) {
             $category_name = $row['category_name'];
             $slugs = $row['slug'];
             echo '<div class="col-md-4 col-6 mb-1">';
-            echo '<a class="dropdown-item" style="white-space: normal;" href="' . $siteurl . 'category?slugs=' . $slugs . '">' . $category_name . '</a>';
+            echo '<a class="dropdown-item" style="white-space: normal;" href="' . $siteurl . 'category/' . $slugs . '">' . $category_name . '</a>';
             echo '</div>';
             $count++;
         }
