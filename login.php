@@ -74,7 +74,7 @@ $show="none"; $textshow="none";
                     </div>
 
                     <div class="d-grid">
-                      <button type="submit" name="signin" class="btn btn-primary btn-lg">Login</button>
+                      <button type="submit" name="signin" class="btn btn-primary">Login</button>
                     </div>
                   </form>
                 </div>
