@@ -49,11 +49,11 @@ $emailMessage = "
                             if(sendEmail($email, $name, $siteName, $siteMail, $emailMessage, $subject)) {
                                 $message = 'Email Verified Successfully!';
                                 showSuccessModal('Success', $message);
-                                header("refresh:2;url=login-register.php?verify_login=$user_log");
+                                header("refresh:2;url=login.php?verify_login=$user_log");
                             } else {
                                 $message = 'Verification successful'; //but failed to send email
                                 showSuccessModal('Success', $message);
-                                header("refresh:2;url=login-register.php?verify_login=$user_log");
+                                header("refresh:2;url=login.php?verify_login=$user_log");
                             }
                         } else {
                             $message = 'Failed to verify';
