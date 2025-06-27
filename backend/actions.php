@@ -124,6 +124,9 @@ if(isset($_POST['register-user'])){
     $password = $_POST['password'];
     $retypePassword = $_POST['retypePassword'];
     $seller = !empty($_POST['register_as_seller']) ? 1 : 0;
+    $loyalty = '0';
+    $wallet = '0';
+    $affiliate = '0';
     $status = 'inactive';
     $date = date('Y-m-d H:i:s');
     $uploadDir = 'uploads/';
@@ -177,9 +180,7 @@ if(isset($_POST['register-user'])){
             // You may add more company-specific fields here
 			$preference = '';
             // Shared/Bank/Social fields
-			$loyalty = '0';
-			$wallet = '0';
-			$affliate = '0';
+			
             $bank_name = mysqli_real_escape_string($con, $_POST['bank-name']);
             $bank_accname = mysqli_real_escape_string($con, $_POST['account-name']);
             $bank_number = mysqli_real_escape_string($con, $_POST['account-number']);
@@ -552,7 +553,7 @@ if (isset( $_POST['signin'])){
                 $date = date('Y-m-d H:i:s');
                 $insert = mysqli_query($con, "UPDATE " . $siteprefix . "users SET last_login = '$date' WHERE s = '$id'") or die('Could not connect: ' . mysqli_error($con));
 
-                session_start();
+             
                 $_SESSION['id'] = $id;
                 setcookie("userID", $id, time() + (10 * 365 * 24 * 60 * 60));
                 $message = "Logged In Successfully";
@@ -583,7 +584,7 @@ if (isset( $_POST['signin'])){
         $date = date('Y-m-d H:i:s');
         $insert = mysqli_query($con, "UPDATE " . $siteprefix . "users SET last_login = '$date' WHERE s = '$id'") or die('Could not connect: ' . mysqli_error($con));
 
-        session_start();
+      
         $_SESSION['id'] = $id;
         setcookie("userID", $id, time() + (10 * 365 * 24 * 60 * 60));
         $message = "Logged In Successfully";
