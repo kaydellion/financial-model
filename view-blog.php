@@ -303,7 +303,7 @@ $comment_count = $countRow['cnt'];
         $countRes = mysqli_query($con, "SELECT COUNT(*) as cnt FROM {$siteprefix}forum_posts WHERE FIND_IN_SET($catId, categories)");
         $countRow = mysqli_fetch_assoc($countRes);
         $count = $countRow['cnt'];
-        echo '<li><a href="blog.php?category='.$catId.'">'.htmlspecialchars($catRow['category_name']).' <span>(' . $count . ')</span></a></li>';
+        echo '<li><a href="'.$siteurl.'blog.php?category='.$catId.'">'.htmlspecialchars($catRow['category_name']).' <span>(' . $count . ')</span></a></li>';
     }
     ?>
   </ul>
