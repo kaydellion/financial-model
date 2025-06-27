@@ -96,7 +96,7 @@ while ($row = mysqli_fetch_array($sql4)) {
 <div class="swiper-wrapper">
   <?php foreach ($allImages as $index => $img): ?>
     <div class="swiper-slide thumbnail-item<?php echo $index === 0 ? ' active' : ''; ?>" data-image="<?php echo htmlspecialchars($img); ?>">
-      <img src="<?php echo htmlspecialchars($img); ?>" alt="Product Thumbnail" class="img-fluid">
+      <img src="<?php echo $siteurl.htmlspecialchars($img); ?>" alt="Product Thumbnail" class="img-fluid">
     </div>
   <?php endforeach; ?>
 </div>
