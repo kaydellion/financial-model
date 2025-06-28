@@ -524,7 +524,7 @@ if (isset( $_POST['signin'])){
 
      else if (!checkPassword($password, $hashedPassword)) {
      $statusAction="Ooops!";
-     $statusMessage='Incorrect Password for this account! <a href="forgot-password.php" style="color:red;">Forgot password? Recover here</a>';
+     $statusMessage='Incorrect Password for this account! <a href="forgot_password.php" style="color:red;">Forgot password? Recover here</a>';
      showErrorModal($statusAction, $statusMessage);  
     }
      
@@ -1394,7 +1394,7 @@ while (true) {
 if (!empty($_FILES['guidance_video']['name'])) {
     $ext = strtolower(pathinfo($_FILES['guidance_video']['name'], PATHINFO_EXTENSION));
     $guidance_video = uniqid('video_') . '.' . $ext;
-    $targetPath = 'uploads/' . $guidance_video;
+    $targetPath = 'documents/' . $guidance_video;
 
     if (move_uploaded_file($_FILES['guidance_video']['tmp_name'], $targetPath)) {
         // File successfully uploaded
@@ -1422,7 +1422,7 @@ if (!empty($_POST['supportDocSelect']) && is_array($_POST['supportDocSelect'])) 
             $fileName = $_FILES['support_files']['name'][$docTypeId];
             $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             $newFileName = uniqid('doc_') . '.' . $ext;
-            $targetPath = 'uploads/' . $newFileName;
+            $targetPath = 'documents/' . $newFileName;
             if (move_uploaded_file($_FILES['support_files']['tmp_name'][$docTypeId], $targetPath)) {
                 // Insert into doc_file table, now with price
                 $sql = "INSERT INTO {$siteprefix}doc_file (report_id, doc_typeid, filename, price, uploaded_at) 
@@ -1650,7 +1650,7 @@ while (true) {
 if (!empty($_FILES['guidance_video']['name'])) {
     $ext = strtolower(pathinfo($_FILES['guidance_video']['name'], PATHINFO_EXTENSION));
     $guidance_video = uniqid('video_') . '.' . $ext;
-    $targetPath = 'uploads/' . $guidance_video;
+    $targetPath = 'documents/' . $guidance_video;
 
     if (move_uploaded_file($_FILES['guidance_video']['tmp_name'], $targetPath)) {
         // File successfully uploaded
@@ -1678,7 +1678,7 @@ if (!empty($_POST['supportDocSelect']) && is_array($_POST['supportDocSelect'])) 
             $fileName = $_FILES['support_files']['name'][$docTypeId];
             $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             $newFileName = uniqid('doc_') . '.' . $ext;
-            $targetPath = 'uploads/' . $newFileName;
+            $targetPath = 'documents/' . $newFileName;
             if (move_uploaded_file($_FILES['support_files']['tmp_name'][$docTypeId], $targetPath)) {
                 // Insert into doc_file table, now with price
                 $sql = "INSERT INTO {$siteprefix}doc_file (report_id, doc_typeid, filename, price, uploaded_at) 
@@ -1933,7 +1933,7 @@ if (!empty($_FILES['guidance_video']['name'])) {
             $hasError = true;
         } else {
             $guidance_video = uniqid('video_') . '.' . $ext;
-            $targetPath = 'uploads/' . $guidance_video;
+            $targetPath = 'documents/' . $guidance_video;
 
             if (move_uploaded_file($_FILES['guidance_video']['tmp_name'], $targetPath)) {
                 $insertQuery = "INSERT INTO {$siteprefix}guidance (report_id, video_filename, uploaded_at) 
