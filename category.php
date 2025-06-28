@@ -24,7 +24,7 @@ if (isset($_GET['slugs'])) {
         // You can use other fields here too if needed
     }
 } else {
-    header("Location: $siteurl/index.php");
+    header("Location: " . $siteurl . "index.php");
     exit();
 }
 $limit = 16; // Number of reports per page
