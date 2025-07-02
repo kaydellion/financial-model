@@ -409,6 +409,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                   <?php } ?>
               </ul>
  <!-- Reviews Tab -->
+   <?php if ($user_purchased) { ?>
                 <div class="tab-pane fade show active" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                   <div class="product-reviews">
                           <div class="review-form-container">
@@ -494,6 +495,8 @@ $all_reviews = $all_reviews_result->fetch_all(MYSQLI_ASSOC);
   <?php endif; ?>
                     </div>
                     </div>
+					
+					<?php } ?>
                     </div>
                     </div>
 					</div>
