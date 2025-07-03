@@ -38,6 +38,7 @@
                         $pricing = $row['pricing'];
                         $price = $row['price'];
                         $tags = $row['tags'];
+                        $slug = $row['alt_title'];
 
                     ?>
                     <tr>
@@ -50,7 +51,7 @@
                         
                         <td>
                             <!-- View Product Button -->
-                            <a href="<?php echo $siteurl;?>product.php?id=<?php echo $report_id; ?>" target="_blank" class="btn btn-info btn-sm me-2">View Product</a>
+                            <a href="<?php echo $siteurl;?>product/<?php echo $slug; ?>" target="_blank" class="btn btn-info btn-sm me-2">View Product</a>
                         </td>
                         <td>
                             <?php if ($pricing != 'free'): ?>
