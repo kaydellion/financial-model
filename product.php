@@ -1,7 +1,7 @@
 <?php include "header.php"; include "product_details.php";  include "sellers-info.php"; 
 
 //get and decode affliate_id if it exists
-$affliate_id = isset($_GET['affiliate']) ? base64_decode($_GET['affiliate']) : 0;
+$affliate_id = isset($_GET['affliate']) ? base64_decode($_GET['affliate']) : 0;
 
 // Check if user has purchased THIS product
 $purchase_query = "SELECT * FROM ".$siteprefix."orders o 
