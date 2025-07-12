@@ -1,6 +1,7 @@
 
 <?php 
 include "header.php";
+checkActiveLog($active_log);
 ?>
 
 
