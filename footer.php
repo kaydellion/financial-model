@@ -85,9 +85,8 @@
                   <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
                   <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
                   <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
-                  <a href="#" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
                   <a href="#" aria-label="Pinterest"><i class="bi bi-pinterest"></i></a>
-                  <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+             
                 </div>
               </div>
             </div>

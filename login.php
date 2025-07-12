@@ -52,7 +52,7 @@ $show="none"; $textshow="none";
                 <div class="tab-pane fade show active" id="login-register-login-form" role="tabpanel">
                   <form method="POST">
                     <div class="alert alert-success alert-dismissible mb-3 fade show" id="myAlert" role="alert" style="display:<?php echo $show; ?>">
-                        Congratulations! Your account has been successfully created. Thank you for registering! <span style="display: <?php echo $textshow;?>"> your email to verify your account.</span></div>
+                       Congratulations! Your Account Has Been Successfully Created.Thank you for registering with us! To complete your registration, please check your email and click the verification link to activate your account.<span style="display: <?php echo $textshow;?>"> your email to verify your account.</span></div>
                     <div class="mb-4">
                       <label for="login-register-login-email" class="form-label">Email address</label>
                       <input type="email" class="form-control" name="email" id="login-register-login-email" required="">

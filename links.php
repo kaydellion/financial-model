@@ -16,7 +16,7 @@ generateLink('loyalty-status.php', 'bi-agenda', 'Subscriptions', $current_page);
 generateLink('wallet.php', 'bi-wallet', 'Wallet', $current_page);
 // Only show "Add Report" if the user is a seller
 if (isset($seller) && $seller == 1) {
-    generateLink('add-report.php', 'bi-plus', 'Add Report', $current_page);
+    generateLink('add-report.php', 'bi-plus', 'Add Models', $current_page);
     generateLink('saved-models.php', 'bi-pencil', 'Draft', $current_page);
 }
 generateLink('notifications.php', 'bi-bell', 'Notifications', $current_page);

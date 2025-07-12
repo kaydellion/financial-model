@@ -361,6 +361,44 @@ if(isset($_POST['register-user'])){
     }
 }
 
+
+
+
+//folow category
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['follow_category_submit'])) {
+    $user_id = $_POST['user_id']; // Logged-in user ID
+    $category_id = $_POST['category_id']; // Category ID
+    $subcategory_id = $_POST['subcategory_id']; // Subcategory ID (can be empty)
+    $actioning = isset($_POST['actioning']) ? $_POST['actioning'] : null; // Action: follow or unfollow
+
+    if (empty($user_id) || empty($category_id)) {
+        echo "<script>alert('Invalid request.');</script>";
+        exit();
+    }
+
+    if ($actioning === "follow_category") {
+        // Add a new follow record for the category
+        $insertQuery = "INSERT INTO ".$siteprefix."followers (user_id, seller_id, followed_at, category_id, subcategory_id) VALUES (?, '', NOW(), ?, ?)";
+        $stmt = $con->prepare($insertQuery);
+        $stmt->bind_param("iis", $user_id, $category_id, $subcategory_id);
+        if ($stmt->execute()) {
+            echo "<script>alert('You are now following this category.');</script>";
+        } else {
+            echo "<script>alert('Failed to follow the category.');</script>";
+        }
+    } elseif ($actioning === "unfollow_category") {
+        // Remove the follow record for the category
+        $deleteQuery = "DELETE FROM ".$siteprefix."followers WHERE user_id = ? AND category_id = ? AND subcategory_id = ?";
+        $stmt = $con->prepare($deleteQuery);
+        $stmt->bind_param("iis", $user_id, $category_id, $subcategory_id);
+        if ($stmt->execute()) {
+            echo "<script>alert('You have unfollowed this category.');</script>";
+        } else {
+            echo "<script>alert('Failed to unfollow the category.');</script>";
+        }
+    }
+}
+
 //register affiliate
 // Affiliate Registration
 if (isset($_POST['register-affiliate'])) {

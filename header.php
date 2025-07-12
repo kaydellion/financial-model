@@ -146,7 +146,7 @@ if (in_array($current_page, $excluded_pages)) {
         <div class="row align-items-center">
           <!-- Add this block for your links, visible on all screens -->
 <div class="col-12 my-2 my-lg-0">
-  <ul class="list-unstyled d-flex flex-wrap mb-0 justify-content-center justify-content-lg-end">
+  <ul class="list-unstyled d-flex flex-wrap mb-0 justify-content-center justify-content-lg-start">
     <li class="bg-secondary text-white p-2 me-2">
       <a class="text-white text-small" href="<?php echo $siteurl; ?>loyalty-program.php">Loyalty Program</a>
     </li>
@@ -156,6 +156,12 @@ if (in_array($current_page, $excluded_pages)) {
     <li class="bg-secondary text-white p-2 me-2 ">
       <a class="text-white text-small" href="<?php echo $siteurl; ?>marketplace.php">Marketplace</a>
     </li>
+
+       <?php if($active_log==0){ ?>
+                    <li class="bg-primary text-white p-2"><a class="text-white" href="<?php echo $siteurl; ?>seller.php">Become a Seller</a></li>
+                    <?php } else {?>
+                    <li class="bg-primary text-white p-2"><a class="text-white" href="<?php echo $siteurl; ?>logout.php">Logout</a></li>
+                    <?php } ?>
   </ul>
 </div>
           
@@ -277,6 +283,7 @@ if (isset($user_id) && !empty($user_id)) {
               <li><a href="<?php echo $siteurl; ?>about.php">About Us</a></li>
               <li><a href="<?php echo $siteurl; ?>blog.php">Blog</a></li>
               <li><a href="<?php echo $siteurl; ?>loyalty-program.php">Loyalty Program</a></li>
+              
 
 
               <li class="products-megamenu-2">

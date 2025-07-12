@@ -13,7 +13,7 @@
               <h1>High-Quality <span>Financial Models</span> for Smarter Decisions</h1>
               <p>We provide high-quality, customizable financial models designed to help businesses and individuals make informed financial decisions. Whether you're a startup, an established enterprise, or an individual seeking financial planning tools, our models offer precision, reliability, and ease of use.</p>
               <div class="hero-cta">
-                <a href="<?php echo $siteurl; ?> marketplace" class="btn btn-shop">Shop Now <i class="bi bi-arrow-right"></i></a>
+                <a href="<?php echo $siteurl; ?>marketplace" class="btn btn-shop">Shop Now <i class="bi bi-arrow-right"></i></a>
 
               </div>
           

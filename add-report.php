@@ -7,7 +7,7 @@
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.php">Home</a></li>
-            <li class="current">Add Report</li>
+            <li class="current">Add Models</li>
           </ol>
         </nav>
       </div>
@@ -20,7 +20,7 @@
               <form method="POST" enctype="multipart/form-data">
  <div class="checkout-section">
                   <div class="section-header">
-                    <h3>Add Report</h3>
+                    <h3>Add Models</h3>
                   </div>
 
 <!-- Basic Layout -->

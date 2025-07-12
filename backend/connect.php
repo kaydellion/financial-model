@@ -7,10 +7,12 @@ $db_username = "root";
 $db_pass = ""; 
 $db_name = "financial_model";
 */
+
+
+
 $db_username = "projectr_financial_model"; 
 $db_pass = "Y34GgwK(]h82Yg"; 
 $db_name = "projectr_finance";
-
 
 $con = mysqli_connect ("$db_host","$db_username","$db_pass","$db_name");
 mysqli_query($con, "SET time_zone = '+01:00'"); // Africa/Lagos

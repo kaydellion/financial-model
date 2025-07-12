@@ -47,6 +47,11 @@ $countRes = mysqli_query($con, "SELECT COUNT(*) as cnt FROM fm_comments WHERE bl
 $countRow = mysqli_fetch_assoc($countRes);
 $comment_count = $countRow['cnt'];
 }
+
+else {
+    header("Location: " . $siteurl . "index.php");
+    exit();
+}
 ?>
   <main class="main">
 
