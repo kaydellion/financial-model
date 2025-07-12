@@ -203,7 +203,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 <section  id="best-sellers" class="best-sellers section">
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="section-title text-center mb-4">
-      <h2>Recent Reports</h2>
+      <h2>RECENT FINANCIAL MODELS</h2>
       <p>See the latest financial models and reports added to our marketplace.</p>
     </div>
     <div class="recent-reports-slider swiper init-swiper">

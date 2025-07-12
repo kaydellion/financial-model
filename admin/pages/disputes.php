@@ -14,7 +14,7 @@ $result = mysqli_query($con, $sql);
 <div class="d-flex justify-content-between align-items-center mb-4">
 <h3>Dispute Resolution Center</h3>
 </div>
-<table class="table table-bordered border-primary">
+<table id="disputesTable" class="table table-bordered border-primary">
     <tr>
         <th>Ticket ID</th>
         <th>Category</th>

@@ -2514,15 +2514,7 @@ section,
 /*--------------------------------------------------------------
 # Best Sellers Section
 --------------------------------------------------------------*/
-.best-sellers .product-card {
-  position: relative;
-  height: 100%;
-  background-color: var(--surface-color);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+
 .best-sellers .view-all-btn {
     display: inline-flex;
     align-items: center;
@@ -2534,6 +2526,15 @@ section,
     background-color: var(--accent-color);
     border-radius: 30px;
     transition: all 0.3s ease;
+}
+.best-sellers .product-card {
+  position: relative;
+  height: 100%;
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .best-sellers .product-info p{
   font-size: 12px;

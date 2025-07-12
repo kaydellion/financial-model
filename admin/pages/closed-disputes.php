@@ -13,25 +13,33 @@ $result = mysqli_query($con, $sql);
 <div class="d-flex justify-content-between align-items-center mb-4">
 <h3>Resolved Disputes</h3>
 </div>
-<table class="table table-bordered border-primary">
-    <tr>
-        <th>Ticket ID</th>
-        <th>Category</th>
-        <th>Reporter</th>
-        <th>Reported Date</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+<table id="disputesTable" class="table table-bordered border-primary">
+    <thead>
         <tr>
-            <td><?= $row['ticket_number']; ?></td>
-            <td><?= $row['category']; ?></td>
-            <td><?= $row['first_name']." ".$row['last_name']; ?></td>
-            <td><?= $row['created_at']; ?></td>
-            <td><span class="badge bg-<?php echo getBadgeColor($row['status']); ?>"><?= $row['status']; ?></span></td>
-            <td><a href="ticket.php?ticket_number=<?= $row['ticket_number']; ?>">View Ticket</a></td>
+            <th>Ticket ID</th>
+            <th>Category</th>
+            <th>Reporter</th>
+            <th>Reported Date</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
-    <?php endwhile; ?>
+    </thead>
+    <tbody>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <tr>
+                <td><?= $row['ticket_number']; ?></td>
+                <td><?= $row['category']; ?></td>
+                <td><?= $row['first_name']." ".$row['last_name']; ?></td>
+                <td><?= $row['created_at']; ?></td>
+                <td>
+                    <span class="badge bg-<?= htmlspecialchars(getBadgeColor($row['status'])) ?>">
+                        <?= htmlspecialchars($row['status']) ?>
+                    </span>
+                </td>
+                <td><a href="ticket.php?ticket_number=<?= $row['ticket_number']; ?>">View Ticket</a></td>
+            </tr>
+        <?php endwhile; ?>
+    </tbody>
 </table>
 
 </div>
