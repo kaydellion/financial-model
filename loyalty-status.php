@@ -129,7 +129,7 @@ $result = mysqli_query($con, $query);
     <?php else: ?>
         <div class="row mt-5 mb-3">
             <div class="col-lg-12 text-center">
-                <?php debug('You have no purchase history.'); ?>
+                <?php echo'You have no purchase history.'; ?>
             </div>
         </div>
     <?php endif; ?>
